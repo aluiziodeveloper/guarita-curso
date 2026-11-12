@@ -48,9 +48,10 @@ func TestHandler_repassaSoOsCabecalhosPermitidos(t *testing.T) {
 	_ = response.Body.Close()
 
 	got := <-seen
-	t.Logf("o servidor recebeu: %v", slices.Sorted(maps.Keys(got)))
-	for name, values := range got {
-		if strings.Contains(strings.Join(values, ","), secret) {
+	names := slices.Sorted(maps.Keys(got))
+	t.Logf("o servidor recebeu: %v", names)
+	for _, name := range names { // em ordem: as falhas saem iguais
+		if strings.Contains(strings.Join(got[name], ","), secret) {
 			t.Errorf("o token do usuário chegou em %s", name)
 		}
 	}
