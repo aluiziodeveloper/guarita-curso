@@ -14,7 +14,11 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | *Confused deputy* | Componente com privilégio que age em nome de quem não o tem | 04 |
 | *Fixture* | Entrada de teste gravada em arquivo, com o resultado esperado | 15 |
 | *Link following* | Abrir pelo nome sem conferir para onde um *link* aponta (CWE-59) | 18 |
+| *Liveness* | A sonda que diz se o processo ainda atende | 22 |
+| *NetworkPolicy* | Regras de quem fala com quem num cluster, por rótulos e portas | 22 |
+| *Readiness* | A sonda que diz se o processo deve receber pedidos novos | 22 |
 | *Seccomp* | Filtro das chamadas ao kernel que um processo pode fazer | 18 |
+| *Sidecar* | Contêiner que divide a rede, ou o *pod*, com o principal | 22 |
 | *Slowloris* | Ataque que prende conexões enviando o pedido devagar | 08 |
 | *Span* | Um trecho do *trace*, feito por um serviço, com início, fim e pai | 20 |
 | *Spotlighting* | Família de técnicas de marcação de procedência para modelos de linguagem | 15 |
@@ -22,7 +26,9 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | *Token passthrough* | Repassar ao destino um token que não foi emitido para ele | 09 |
 | *Trace* | A história de um pedido por todos os serviços que ele atravessa | 20 |
 | `errgroup` | Grupo de goroutines com erro e cancelamento compartilhados | 06 |
+| `flat` e `cum` | Tempo na própria função; tempo nela e no que ela chamou | 22 |
 | `fmt.Stringer` | Interface com `String() string`, usada pela formatação | 04 |
+| `fsGroup` | Grupo que o kubelet dá aos arquivos dos volumes de um *pod* | 22 |
 | `fsync` | Chamada que espera os dados chegarem ao disco | 20 |
 | `internal` | Pasta cujos pacotes só podem ser importados dentro do mesmo prefixo de caminho | 01 |
 | `iota` | Contador de linhas de um bloco `const`, começando em 0 | 04 |
@@ -126,6 +132,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | GCRA | Algoritmo que guarda o balde como um instante teórico, o `tat` | 19 |
 | Goroutine | Função executando de forma independente, gerida pelo runtime de Go | 06 |
 | HMAC | Hash com chave secreta, da RFC 2104 | 20 |
+| Import pelo efeito | Import com `_`, que só carrega o pacote e roda a `init` dele | 22 |
 | Impressão digital | SHA-256 da forma canônica da definição | 10 |
 | Indefinido | O estado de uma regra cujo corpo não vale | 12 |
 | Inferência de tipos | O compilador deduzir o parâmetro de tipo pelos argumentos | 17 |
@@ -137,6 +144,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | JSON Lines | Um valor JSON por linha de um arquivo | 20 |
 | JSON-RPC | Formato de chamada remota em JSON usado por todas as mensagens MCP | 01 |
 | JWT | Token com afirmações assinadas, em três partes | 09 |
+| Lei de Amdahl | O ganho do todo, limitado pela fração que fica mais rápida | 22 |
 | Limiar | Pontuação a partir da qual o resultado é barrado | 16 |
 | Linha de inspetores | As etapas de uma rota, na ordem em que o caso de uso as consulta | 17 |
 | Lista de destinos | Os hosts para onde uma URL nos argumentos pode apontar | 14 |
@@ -165,6 +173,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Opção funcional | Função que ajusta um valor em construção | 05 |
 | Origem | Esquema, nome e porta de uma página | 08 |
 | Orçamento de custo | Unidades por agente, de onde cada chamada tira o custo estimado | 19 |
+| Orçamento de erro | O quanto o serviço pode falhar sem violar o SLO | 22 |
 | Orçamento de falsos positivos | A FPR máxima aceita, fixada antes da medida | 16 |
 | Pacote de teste externo | Pacote `x_test` que só enxerga a API exportada de `x` | 03 |
 | Parser estrito | Parser que recusa a mensagem inteira diante de qualquer ambiguidade | 07 |
@@ -174,6 +183,8 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Pedido | Mensagem JSON-RPC com `method` e `id`, que espera resposta | 07 |
 | PEM | Texto em Base64 entre marcadores, com a chave em PKIX ou PKCS #8 | 09 |
 | PEP | Ponto que intercepta a chamada e aplica a decisão: o `InterceptCall` | 12 |
+| Percentil | O valor abaixo do qual está uma fração das medidas | 22 |
+| Perfil de CPU | Amostras das pilhas de chamadas, para saber onde vai o tempo | 22 |
 | PID 1 | O primeiro processo de um namespace, que só recebe os sinais que trata | 18 |
 | Pin (*pinning*) | Definição fixada de uma ferramenta num servidor | 10 |
 | Plano B | Defesa mais fraca que decide no lugar da principal, por escolha do operador | 16 |
@@ -210,6 +221,8 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Silhueta | O nome em minúsculas ASCII, com hífen e ponto como sublinhado | 11 |
 | Sinal forte | Sinal que um resultado legítimo quase nunca tem; barra | 15 |
 | Sinal fraco | Sinal comum também em resultados legítimos; só é registrado | 15 |
+| SLI | Medida do serviço do ponto de vista de quem o usa | 22 |
+| SLO | O valor que o SLI precisa ter | 22 |
 | Sombreamento de ferramenta (*tool shadowing*) | Um servidor anuncia uma ferramenta com o nome que outro já usa | 11 |
 | Sonda | Programa que mede, de dentro, o que um ambiente deixa fazer | 18 |
 | SPDX | Formato de SBOM, norma ISO/IEC 5962 | 21 |
@@ -256,8 +269,11 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | PEP | Ponto de aplicação da política (*policy enforcement point*) | 12 |
 | SBOM | Lista de materiais de software (*software bill of materials*) | 21 |
 | SDK | Kit de desenvolvimento de software | 01 |
+| SLI | Indicador de nível de serviço (*service level indicator*) | 22 |
+| SLO | Objetivo de nível de serviço (*service level objective*) | 22 |
 | SLSA | Níveis de proveniência para builds (*Supply-chain Levels for Software Artifacts*) | 21 |
 | SSE | Fluxo de eventos enviados pelo servidor (*Server-Sent Events*) | 08 |
 | SSRF | Falsificação de pedido pelo servidor (*server-side request forgery*) | 08 |
 | STRIDE | As seis categorias de ameaça: falsificação de identidade, adulteração, repúdio, divulgação de informação, negação de serviço e elevação de privilégio | 04 |
+| TLS | Segurança da camada de transporte (*Transport Layer Security*) | 22 |
 | TOCTOU | Do momento da conferência ao momento do uso (*time of check to time of use*) | 18 |
