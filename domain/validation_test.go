@@ -17,7 +17,20 @@ func TestCallValidate(t *testing.T) {
 	}{
 		{
 			name: "object arguments",
-			call: Call{ToolName: "read_file", Arguments: []byte(`{"path":"notes.txt"}`)},
+			call: Call{
+				ToolName:  "read_file",
+				Arguments: []byte(`{"path":"notes.txt"}`),
+			},
+		},
+		{
+			name: "malformed JSON",
+			call: Call{
+				ToolName:  "read_file",
+				Arguments: []byte(`{"path":`),
+			},
+			want:      ErrInvalidArguments.Error(),
+			wantField: "arguments",
+			wantKind:  ErrInvalidArguments,
 		},
 		{
 			name: "empty object arguments",
@@ -25,7 +38,10 @@ func TestCallValidate(t *testing.T) {
 		},
 		{
 			name: "nested object arguments",
-			call: Call{ToolName: "read_file", Arguments: []byte(`{"options":{"recursive":true}}`)},
+			call: Call{
+				ToolName:  "read_file",
+				Arguments: []byte(`{"options":{"recursive":true}}`),
+			},
 		},
 		{
 			name: "whitespace around object",
@@ -53,13 +69,6 @@ func TestCallValidate(t *testing.T) {
 			wantKind:  ErrInvalidArguments,
 		},
 		{
-			name:      "malformed JSON",
-			call:      Call{ToolName: "read_file", Arguments: []byte(`{"path":`)},
-			want:      ErrInvalidArguments.Error(),
-			wantField: "arguments",
-			wantKind:  ErrInvalidArguments,
-		},
-		{
 			name:      "trailing JSON value",
 			call:      Call{ToolName: "read_file", Arguments: []byte(`{} {}`)},
 			want:      ErrInvalidArguments.Error(),
@@ -67,8 +76,11 @@ func TestCallValidate(t *testing.T) {
 			wantKind:  ErrInvalidArguments,
 		},
 		{
-			name:      "invalid UTF-8 in JSON",
-			call:      Call{ToolName: "read_file", Arguments: []byte("{\"path\":\"\xff\"}")},
+			name: "invalid UTF-8 in JSON",
+			call: Call{
+				ToolName:  "read_file",
+				Arguments: []byte("{\"path\":\"\xff\"}"),
+			},
 			want:      ErrInvalidArguments.Error(),
 			wantField: "arguments",
 			wantKind:  ErrInvalidArguments,
@@ -88,8 +100,11 @@ func TestCallValidate(t *testing.T) {
 			wantKind:  ErrInvalidArguments,
 		},
 		{
-			name:      "scalar arguments",
-			call:      Call{ToolName: "read_file", Arguments: []byte(`"secret-value"`)},
+			name: "scalar arguments",
+			call: Call{
+				ToolName:  "read_file",
+				Arguments: []byte(`"secret-value"`),
+			},
 			want:      ErrInvalidArguments.Error(),
 			wantField: "arguments",
 			wantKind:  ErrInvalidArguments,
@@ -115,18 +130,19 @@ func TestCallValidate(t *testing.T) {
 
 			var validationError *ValidationError
 			if !errors.As(err, &validationError) {
-				t.Fatalf("Validate() error type = %T; want *ValidationError", err)
+				t.Fatalf("error type = %T; want *ValidationError", err)
 			}
-			if got, want := validationError.Field(), test.wantField; got != want {
-				t.Errorf("ValidationError.Field() = %q; want %q", got, want)
+			if got := validationError.Field(); got != test.wantField {
+				t.Errorf("Field() = %q; want %q", got, test.wantField)
 			}
 
 			if !errors.Is(err, test.wantKind) {
 				t.Errorf("errors.Is(%v, %v) = false", err, test.wantKind)
 			}
 
-			if len(test.call.Arguments) > 0 && strings.Contains(err.Error(), string(test.call.Arguments)) {
-				t.Errorf("Validate() error contains raw arguments: %q", err)
+			raw := string(test.call.Arguments)
+			if raw != "" && strings.Contains(err.Error(), raw) {
+				t.Errorf("error contains raw arguments: %q", err)
 			}
 		})
 	}
