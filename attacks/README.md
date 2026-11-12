@@ -20,6 +20,7 @@ Os servidores daqui existem só para o laboratório do curso. Eles rodam dentro 
 | `abuse` | Um agente em laço esgota a fatura de um modelo pago; um servidor que falha devagar segura cada chamada | Cota e orçamento de custo por agente; disjuntor no repasse | 19 |
 | `audittamper` | Depois do incidente, alguém troca uma decisão na trilha, apaga, reordena, forja ou corta linhas; o registro guarda o CPF | Trilha encadeada por SHA-256, verificador e cabeça guardada à parte; argumentos só por HMAC | 20 |
 | `supplychain` | A atualização do servidor de arquivos traz código fora da versão aprovada, com o mesmo nome, a mesma versão e as mesmas definições; a mesma atualização aparece antes no PATH | Digest do executável aprovado, conferido no caminho real antes de iniciar o servidor | 21 |
+| `redteam` | A cadeia combinada: os laboratórios dos Módulos 7 a 22 juntos contra uma só Guarita, e a mesma exfiltração no modo stdio; uma página de ataque no erro JSON-RPC | Todas as defesas ligadas; a linha de ida no stdio e a recusa das opções que ele não aplica; o erro revisado | 23 |
 
 A medida do classificador (`attacks/classifier`, `TestClassificador`) exige um Ollama local e é pulada sem ele; na CI, só o teste do modelo fora do ar roda. Os testes de `attacks/sandbox` exigem um Docker local; na CI, o Docker do runner os roda. Para medir:
 
