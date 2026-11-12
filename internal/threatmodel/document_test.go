@@ -11,9 +11,9 @@ import (
 
 const modelDocument = "../../docs/threats/model.md"
 
-var documentRow = regexp.MustCompile(
-	"^\\| `([a-z-]+)` \\| (.+) \\| (.+) \\| (.+) \\| (\\d+) \\| (.+) \\|$",
-)
+// | `id` | nome | categorias | fronteira | módulo | estado |
+var documentRow = regexp.MustCompile("^\\| `([a-z-]+)` " +
+	`\| (.+) \| (.+) \| (.+) \| (\d+) \| (.+) \|$`)
 
 type documentThreat struct {
 	name, categories, boundary, status string
@@ -72,7 +72,8 @@ func TestModelo_coincideComODocumento(t *testing.T) {
 			status:     threat.Status.String(),
 		}
 		if row != want {
-			t.Errorf("%s: documento %+v; código %+v", threat.ID, row, want)
+			t.Errorf("%s: documento %+v; código %+v",
+				threat.ID, row, want)
 		}
 	}
 	for id := range rows {
