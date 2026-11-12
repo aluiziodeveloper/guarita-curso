@@ -1,6 +1,6 @@
 # Modelo de ameaças da Guarita — v1
 
-- **Versão:** v1, Módulo 4 do curso (*tag* `aula-04-12`); ameaça `dns-rebinding` acrescentada no Módulo 8 (*tag* `aula-08-12`), quando a Guarita passou a escutar na rede.
+- **Versão:** v1, Módulo 4 do curso (*tag* `aula-04-12`); ameaça `dns-rebinding` acrescentada no Módulo 8 (*tag* `aula-08-12`), quando a Guarita passou a escutar na rede; `credential-theft` parcialmente mitigada no Módulo 9 (*tag* `aula-09-13`).
 - **Método:** zonas e fronteiras de confiança, STRIDE por ameaça e árvores de ataque em [`trees.md`](trees.md).
 - **Fonte de verdade:** a tabela de ameaças deste arquivo e a função `threatmodel.Model()` precisam coincidir; o teste `TestModelo_coincideComODocumento` quebra a CI quando divergem.
 
@@ -60,7 +60,7 @@ Estado `open` significa que a Guarita ainda não tem a defesa. A conferência op
 | `excessive-agency` | Agência excessiva | elevation-of-privilege | agent->guarita | 12 | open |
 | `data-exfiltration` | Exfiltração de dados nos argumentos | information-disclosure | guarita->mcp-server | 14 | open |
 | `sandbox-escape` | Fuga da sandbox do servidor | elevation-of-privilege | guarita->mcp-server | 18 | open |
-| `credential-theft` | Repasse ou roubo de credenciais (*confused deputy*) | spoofing, information-disclosure | guarita->mcp-server | 9 | open |
+| `credential-theft` | Repasse ou roubo de credenciais (*confused deputy*) | spoofing, information-disclosure | guarita->mcp-server | 9 | partially-mitigated |
 | `supply-chain` | Pacote de servidor comprometido | tampering | operator->mcp-server | 21 | open |
 | `resource-abuse` | Laços de chamadas que esgotam cota ou custo | denial-of-service | agent->guarita | 19 | open |
 | `insecure-parsing` | Mensagem malformada ou ambígua no protocolo | tampering, denial-of-service | agent->guarita | 7 | partially-mitigated |
@@ -72,7 +72,8 @@ Estado `open` significa que a Guarita ainda não tem a defesa. A conferência op
 | ID | Desde | O que cobre | Testes de ataque | O que falta |
 |---|---|---|---|---|
 | `insecure-parsing` | Módulo 7 | Parser estrito das mensagens do agente: um valor por mensagem, sem chave repetida, sem lote, UTF-8, aninhamento e tamanho limitados. No stdio desde o Módulo 7; nos POST do transporte HTTP desde o Módulo 8, com corpo limitado a 4 MiB e prazo de leitura | `internal/adapters/mcpproxy`: contrabando, chave duplicada, mensagem grande, golden e fuzzing; `internal/adapters/mcphttp`: contrato com contrabando, corpo grande e corpo lento | Respostas do servidor (desafio do Módulo 7) |
-| `dns-rebinding` | Módulo 8 | `Host` de todo pedido contra a lista derivada do endereço de escuta; `Origin`, quando vem, contra uma lista exata; escuta em loopback por padrão; 403 com erro JSON-RPC | `internal/adapters/mcphttp`: guarda, contrato e integração; `deploy/rebinding-lab.sh` com `curl --resolve` | Autenticação do agente (Módulo 9); fora do loopback, a proteção depende da lista em `-host` |
+| `dns-rebinding` | Módulo 8 | `Host` de todo pedido contra a lista derivada do endereço de escuta; `Origin`, quando vem, contra uma lista exata; escuta em loopback por padrão; 403 com erro JSON-RPC | `internal/adapters/mcphttp`: guarda, contrato e integração; `deploy/rebinding-lab.sh` com `curl --resolve` | Fora do loopback, a proteção depende da lista em `-host`; desde o Módulo 9, a Guarita também exige o *token* do agente nesse caso |
+| `credential-theft` | Módulo 9 | No transporte HTTP: *token* do agente verificado (Ed25519, emissor, audiência igual ao recurso da Guarita, validade); repasse só dos cabeçalhos permitidos; credencial própria da Guarita para o servidor; segredos com tipo que se redige nos registros | `internal/adapters/identity` (audiência, algoritmo, `alg none`); `internal/adapters/mcphttp`: cabeçalhos permitidos, credencial, *confused deputy*, registro sem segredos | Uma credencial por servidor quando houver vários (Módulo 11); escopos por ferramenta e agente na política (Módulo 12); o transporte stdio não tem identidade de agente |
 
 ## A cena do Módulo 4: o *confused deputy*
 
