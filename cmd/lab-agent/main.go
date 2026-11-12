@@ -169,6 +169,7 @@ func runWithOptions(ctx context.Context, prompt string, options runOptions) erro
 		http:    &http.Client{Timeout: 4 * time.Minute},
 	}
 	messages := []ollamaMessage{{Role: "user", Content: prompt}}
+	callLog := options.toolCallLog
 
 	for turn := 0; turn <= maxToolCallingTurns; turn++ {
 		response, err := ollama.chat(ctx, messages, tools)
@@ -200,8 +201,7 @@ func runWithOptions(ctx context.Context, prompt string, options runOptions) erro
 					"decode arguments for MCP tool %q: %w", name, err,
 				)
 			}
-			err = logToolCall(options.toolCallLog, call.Function)
-			if err != nil {
+			if err := logToolCall(callLog, call.Function); err != nil {
 				return err
 			}
 			result, err := session.CallTool(ctx, &mcp.CallToolParams{
