@@ -31,7 +31,9 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Cabeçalho espelhado | Cópia, num cabeçalho HTTP, de um campo do corpo | 09 |
 | Camada anticorrupção | Camada que traduz entre o protocolo externo e o domínio | 07 |
 | Canal | Cano tipado entre goroutines, que também sincroniza | 06 |
+| Caractere de formatação | Ponto de código `Cf`: não desenha nada, ou muda o que está em volta | 11 |
 | Caso de uso | Operação da aplicação, como `InterceptCall` | 05 |
+| Categoria geral | Classificação Unicode de cada ponto de código, como `Cf` ou `Mn` | 11 |
 | Chamada de ferramentas | Ciclo em que o modelo pede uma ferramenta e recebe o resultado como mensagem | 01 |
 | Chave duplicada | Mesmo nome duas vezes num objeto JSON, com leitura imprevisível | 07 |
 | CI | Integração contínua: compilação e testes automáticos a cada push, no GitHub Actions | 01 |
@@ -41,6 +43,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Consulta parametrizada | Texto da consulta e valores enviados separados | 10 |
 | Contrabando de mensagem | Segunda mensagem colada depois da primeira na mesma linha | 07 |
 | Contrapressão | Espera que volta até quem envia quando o destino não acompanha | 06 |
+| Corpus de ataques | Conjunto de entradas em arquivos, cada uma com o resultado esperado | 11 |
 | Corpus de sementes | Entradas iniciais do fuzzing, de `f.Add` e de `testdata/fuzz` | 07 |
 | Corrida de dados | Acesso concorrente sem ordem a um valor, com ao menos uma escrita | 06 |
 | CSRF | Pedido disparado por outra página, com a credencial que o navegador manda sozinho | 08 |
@@ -75,6 +78,8 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Modelo de ameaças | Documento versionado com ativos, zonas, fronteiras e ameaças, mantido junto do código | 04 |
 | Modelo de domínio anêmico | Tipos com nomes de negócio e pouco ou nenhum comportamento próprio | 03 |
 | Módulo | Unidade Go que declara caminho, versão mínima e dependências | 01 |
+| Namespace (de servidor) | Nome que o operador dá a um servidor, e o caminho dele na Guarita | 11 |
+| Normalização | Escolher uma escrita só para textos equivalentes (NFC, NFKC) | 11 |
 | Notificação | Mensagem com `method` e sem `id`, que não recebe resposta | 07 |
 | Opção funcional | Função que ajusta um valor em construção | 05 |
 | Origem | Esquema, nome e porta de uma página | 08 |
@@ -92,8 +97,11 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Regra de dependência | Dependências de código apontam para o núcleo | 05 |
 | Repositório | Porta que esconde onde e como os dados ficam | 10 |
 | Restrição de compilação | Linha `//go:build` que decide se um arquivo entra no pacote | 06 |
+| Runa | Valor de um ponto de código Unicode em Go, um `int32` | 11 |
 | Servidor de autorização | Quem autentica o usuário e emite tokens | 09 |
 | Servidor de recursos | Quem recebe tokens e decide o que eles permitem; a Guarita, para o agente | 09 |
+| Silhueta | O nome em minúsculas ASCII, com hífen e ponto como sublinhado | 11 |
+| Sombreamento de ferramenta (*tool shadowing*) | Um servidor anuncia uma ferramenta com o nome que outro já usa | 11 |
 | STRIDE | Seis categorias de ameaça, cada uma ligada a uma propriedade de segurança | 04 |
 | Suíte de ataques | Testes que rodam cada ataque sem e com a defesa | 10 |
 | Teste de consistência | Teste que compara um documento de projeto com os dados do código | 04 |
@@ -102,9 +110,11 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Tipo definido | Tipo novo, com identidade própria, declarado a partir de um tipo subjacente | 03 |
 | Toolchain | Compilador e ferramentas acessados pelo comando `go` | 01 |
 | Troca silenciosa (*rug pull*) | O servidor muda a definição de uma ferramenta depois de aprovada | 10 |
+| Validar em vez de normalizar | Aceitar ou recusar os dados como vieram, sem consertá-los | 11 |
 | Validação na fronteira | Conferência dos dados antes de entregá-los ao próximo componente | 03 |
 | Valor de contexto | Dado de um pedido guardado no `context.Context`, com chave própria | 09 |
 | Valor zero | Valor que Go atribui a uma variável sem inicialização explícita | 03 |
+| Varredor estrutural | Procura sinais objetivos de disfarce, não intenção | 11 |
 | Vazamento de goroutine (*goroutine leak*) | Goroutine que nunca termina e acumula recursos | 06 |
 | Zona de confiança | Parte do sistema que opera sob um mesmo nível de confiança | 04 |
 | Árvore de ataque (*attack tree*) | Objetivo do atacante na raiz, caminhos em ramos E e OU | 04 |
