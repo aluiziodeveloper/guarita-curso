@@ -21,6 +21,18 @@ func openTemp(t *testing.T) (*Store, string) {
 
 const server = "http://files.lab.test/mcp"
 
+// insertOld grava um pin com as colunas da 0001. O estado antigo vem
+// em SQL: o código atual fala o esquema mais novo e falharia ali.
+func insertOld(t *testing.T, store *Store, server, tool, fp string) {
+	t.Helper()
+	_, err := store.db.ExecContext(context.Background(), `INSERT INTO
+		pins (server, tool, fingerprint, definition, pinned_at)
+		VALUES (?, ?, ?, '{}', 'antes')`, server, tool, fp)
+	if err != nil {
+		t.Fatalf("gravar no esquema antigo: %v", err)
+	}
+}
+
 func pin(tool, fingerprint string) domain.Pin {
 	return domain.Pin{
 		Server: server, Tool: tool,
@@ -72,13 +84,13 @@ func TestOpen_migracoesIdempotentes(t *testing.T) {
 	var version int
 	_ = again.db.QueryRowContext(ctx, "PRAGMA user_version").Scan(&version)
 	_, found, _ := again.Pin(ctx, server, "read_file")
-	if version != 2 || !found {
+	if version != 3 || !found {
 		t.Fatalf("user_version = %d, pin encontrado = %v", version, found)
 	}
 }
 
-// Um banco criado só com a 0001, com um pin, recebe a 0002 ao abrir: o
-// pin continua lá, sem marca, e passa a aceitar a definição divergente.
+// Um banco criado só com a 0001, com um pin, recebe as migrações novas
+// ao abrir: o pin continua lá, sem marca, e aceita a divergente.
 func TestOpen_migraSobreDadosExistentes(t *testing.T) {
 	ctx := context.Background()
 	path := filepath.Join(t.TempDir(), "catalog.db")
@@ -86,16 +98,16 @@ func TestOpen_migraSobreDadosExistentes(t *testing.T) {
 	if err != nil {
 		t.Fatalf("abrir na 0001: %v", err)
 	}
-	_ = old.SavePin(ctx, pin("read_file", "sha256:aaa"))
+	insertOld(t, old, server, "read_file", "sha256:aaa")
 	_ = old.Close()
 
 	store, err := Open(ctx, path)
 	if err != nil {
-		t.Fatalf("migrar para a 0002: %v", err)
+		t.Fatalf("migrar: %v", err)
 	}
 	t.Cleanup(func() { _ = store.Close() })
 	before, found, _ := store.Pin(ctx, server, "read_file")
-	t.Logf("depois da 0002: encontrado=%v changed=%v", found,
+	t.Logf("depois das migrações: encontrado=%v changed=%v", found,
 		before.Changed)
 	err = store.MarkChanged(ctx, server, "read_file", "sha256:bbb",
 		[]byte(`{"name":"read_file","description":"nova"}`))
@@ -107,3 +119,53 @@ func TestOpen_migraSobreDadosExistentes(t *testing.T) {
 	}
 }
 
+
+// skeletonNames tem nomes válidos, maiúsculas, separadores e letras
+// fora do ASCII, que lower não muda no SQLite.
+var skeletonNames = []string{
+	"read_file", "Read-File", "admin.Tools.LIST",
+	"Ação-X", "ÇA.b",
+}
+
+// A silhueta que a 0003 calcula em SQL é a de domain.Skeleton.
+func TestOpen_silhuetaEmSQLIgualAoGo(t *testing.T) {
+	ctx := context.Background()
+	path := filepath.Join(t.TempDir(), "catalog.db")
+	old, err := open(ctx, path, 2)
+	if err != nil {
+		t.Fatalf("abrir na 0002: %v", err)
+	}
+	names := skeletonNames
+	for _, name := range names {
+		insertOld(t, old, "old", name, "f")
+	}
+	_ = old.Close()
+	store, err := Open(ctx, path)
+	if err != nil {
+		t.Fatalf("migrar para a 0003: %v", err)
+	}
+	t.Cleanup(func() { _ = store.Close() })
+	for _, name := range names {
+		var got string
+		_ = store.db.QueryRowContext(ctx, `SELECT skeleton FROM pins
+			WHERE tool = ?`, name).Scan(&got)
+		if want := domain.Skeleton(name); got != want {
+			t.Errorf("%q: SQL %q, Go %q", name, got, want)
+		}
+	}
+}
+
+
+func TestStore_ownerAchaOutroServidor(t *testing.T) {
+	store, _ := openTemp(t)
+	ctx := context.Background()
+	first := pin("read_file", "sha256:aaa")
+	_ = store.SavePin(ctx, first)
+	owner, found, err := store.Owner(ctx, "mail", "Read-File")
+	if err != nil || !found || owner != server {
+		t.Fatalf("Owner() = %q, %v, %v", owner, found, err)
+	}
+	if _, found, _ := store.Owner(ctx, server, "read_file"); found {
+		t.Fatal("o próprio servidor não colide consigo mesmo")
+	}
+}
