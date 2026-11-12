@@ -1,6 +1,6 @@
 # Modelo de ameaças da Guarita — v1
 
-- **Versão:** v1, Módulo 4 do curso (*tag* `aula-04-12`).
+- **Versão:** v1, Módulo 4 do curso (*tag* `aula-04-12`); ameaça `dns-rebinding` acrescentada no Módulo 8 (*tag* `aula-08-12`), quando a Guarita passou a escutar na rede.
 - **Método:** zonas e fronteiras de confiança, STRIDE por ameaça e árvores de ataque em [`trees.md`](trees.md).
 - **Fonte de verdade:** a tabela de ameaças deste arquivo e a função `threatmodel.Model()` precisam coincidir; o teste `TestModelo_coincideComODocumento` quebra a CI quando divergem.
 
@@ -65,12 +65,14 @@ Estado `open` significa que a Guarita ainda não tem a defesa. A conferência op
 | `resource-abuse` | Laços de chamadas que esgotam cota ou custo | denial-of-service | agent->guarita | 19 | open |
 | `insecure-parsing` | Mensagem malformada ou ambígua no protocolo | tampering, denial-of-service | agent->guarita | 7 | partially-mitigated |
 | `approval-forgery` | Aprovação forjada ou obtida por fadiga | spoofing, repudiation | operator->guarita | 13 | open |
+| `dns-rebinding` | Página da web alcança a Guarita local por DNS rebinding | spoofing, elevation-of-privilege | agent->guarita | 8 | partially-mitigated |
 
 ## Defesas em vigor
 
 | ID | Desde | O que cobre | Testes de ataque | O que falta |
 |---|---|---|---|---|
-| `insecure-parsing` | Módulo 7 | Parser estrito das mensagens do agente no transporte stdio: um valor por linha, sem chave repetida, sem lote, UTF-8, aninhamento e tamanho limitados | `internal/adapters/mcpproxy`: contrabando, chave duplicada, mensagem grande, golden e fuzzing | Respostas do servidor (desafio do Módulo 7) e transporte HTTP (Módulo 8) |
+| `insecure-parsing` | Módulo 7 | Parser estrito das mensagens do agente: um valor por mensagem, sem chave repetida, sem lote, UTF-8, aninhamento e tamanho limitados. No stdio desde o Módulo 7; nos POST do transporte HTTP desde o Módulo 8, com corpo limitado a 4 MiB e prazo de leitura | `internal/adapters/mcpproxy`: contrabando, chave duplicada, mensagem grande, golden e fuzzing; `internal/adapters/mcphttp`: contrato com contrabando, corpo grande e corpo lento | Respostas do servidor (desafio do Módulo 7) |
+| `dns-rebinding` | Módulo 8 | `Host` de todo pedido contra a lista derivada do endereço de escuta; `Origin`, quando vem, contra uma lista exata; escuta em loopback por padrão; 403 com erro JSON-RPC | `internal/adapters/mcphttp`: guarda, contrato e integração; `deploy/rebinding-lab.sh` com `curl --resolve` | Autenticação do agente (Módulo 9); fora do loopback, a proteção depende da lista em `-host` |
 
 ## A cena do Módulo 4: o *confused deputy*
 
