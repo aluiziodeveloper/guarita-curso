@@ -9,10 +9,12 @@ import (
 	"errors"
 	"io"
 	"log/slog"
+	"math"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/mcpproxy"
@@ -69,6 +71,7 @@ type Handler struct {
 	agent       func(context.Context) string
 	catalog     ToolReviewer
 	results     ResultReviewer
+	transport   http.RoundTripper // nil: o http.DefaultTransport
 }
 
 // Option ajusta um Handler: é uma opção funcional.
@@ -102,6 +105,12 @@ func WithBodyTimeout(d time.Duration) Option {
 }
 
 
+// WithTransport troca o RoundTripper do repasse, como pelo disjuntor
+// do Módulo 19, que recusa na hora quando o servidor está falhando.
+func WithTransport(transport http.RoundTripper) Option {
+	return func(h *Handler) { h.transport = transport }
+}
+
 // NewHandler monta o proxy reverso para upstream. As opções são
 // aplicadas antes, porque rewrite lê o que elas configuram.
 func NewHandler(
@@ -123,6 +132,7 @@ func NewHandler(
 	}
 	handler.proxy = &httputil.ReverseProxy{
 		Rewrite: handler.rewrite, ErrorHandler: proxyError,
+		Transport:      handler.transport,
 		ModifyResponse: handler.modifyResponse,
 		ErrorLog: slog.NewLogLogger(handler.logger.Handler(),
 			slog.LevelWarn),
@@ -245,10 +255,20 @@ func replyStatus(reply []byte) int {
 
 // proxyError traduz a falha do repasse. Prazo esgotado é 504; servidor
 // fora do ar é 502; o agente que desistiu não recebe nada.
+// retryAfter é o erro que diz quanto esperar, como o do disjuntor. A
+// interface é deste pacote, e o disjuntor a satisfaz sem importá-lo.
+type retryAfter interface{ RetryAfter() time.Duration }
+
 func proxyError(w http.ResponseWriter, r *http.Request, err error) {
+	var wait retryAfter
 	switch {
 	case errors.Is(r.Context().Err(), context.Canceled):
 		return
+	case errors.As(err, &wait):
+		w.Header().Set("Retry-After", strconv.Itoa(
+			int(math.Ceil(wait.RetryAfter().Seconds()))))
+		writeError(w, http.StatusServiceUnavailable, codeInternalError,
+			"upstream circuit open")
 	case errors.Is(err, context.DeadlineExceeded):
 		writeError(w, http.StatusGatewayTimeout, codeInternalError,
 			"upstream timeout")
