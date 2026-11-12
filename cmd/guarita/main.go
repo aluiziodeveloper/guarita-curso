@@ -20,3 +20,4 @@ func run(stderr io.Writer) error {
 	_, err := fmt.Fprintln(stderr, startupMessage)
 	return err
 }
+
