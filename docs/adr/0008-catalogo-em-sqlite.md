@@ -35,4 +35,4 @@ Duas fixações ingênuas falham (`examples/naivepin`): fixar só a descrição 
 - A primeira definição é aceita sem revisão: um servidor que já chega envenenado passa pelo catálogo. A varredura das descrições é o Módulo 11.
 - Trocar a implementação sem trocar a definição não é visível aqui; a *sandbox* do Módulo 18 contém esse caso.
 - O catálogo existe no transporte HTTP; no stdio, a leitura de `tools/list` fica para depois.
-- O mesmo banco vai receber a auditoria no Módulo 20, com migrações novas.
+- A previsão de que o mesmo banco receberia a auditoria no Módulo 20 não se cumpriu: a ADR 0018 escolheu uma trilha à parte, em JSON Lines, só de acréscimo, e o banco ficou com o catálogo.

@@ -11,7 +11,7 @@ A política decide quem chama o quê, e a aprovação põe uma pessoa diante das
 ## Decisão
 
 1. Uma porta nova, `Inspector`, examina a chamada que a política não negou. Os inspetores rodam em ordem, e a decisão mais severa vence (`domain.Stricter`); uma decisão fora do conjunto conta como negação, e um inspetor que falha nega.
-2. Os primeiros inspetores são determinísticos: padrões, validadores, medidas e listas. Os classificadores com modelo de linguagem dos Módulos 15 e 16 entram depois deles, como outras implementações da mesma porta.
+2. Os primeiros inspetores são determinísticos: padrões, validadores, medidas e listas. As regras de injeção do Módulo 15 e o classificador com modelo de linguagem do Módulo 16 examinam o resultado, e não a chamada: entram depois, numa porta irmã, `ResultInspector`, com o mesmo laço e a mesma regra da decisão mais severa.
 3. O inspetor DLP percorre todas as strings dos argumentos e acha CPF com os dígitos verificadores, formatos públicos de chave, o mesmo dentro de base64 decodificado e tokens de entropia alta. A decisão por sinal fica numa tabela: chave nega; CPF e entropia pedem aprovação.
 4. Com `-allow-hosts`, toda URL nos argumentos precisa apontar para um host da lista, extraído com `url.Parse`.
 5. Com `-validate-arguments`, os argumentos são validados contra o `inputSchema` da definição fixada, com a biblioteca que já vinha com o SDK do MCP, sem `Loader` para `$ref` remoto.
