@@ -16,3 +16,12 @@ type Pin struct {
 	SeenDefinition  json.RawMessage
 }
 
+
+// Finding é um sinal suspeito numa definição de ferramenta: em que
+// campo, qual sinal e o detalhe que o operador precisa para conferir.
+type Finding struct {
+	Field  string // caminho no JSON, como inputSchema.properties.path
+	Signal string
+	Detail string
+}
+
