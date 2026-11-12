@@ -17,6 +17,8 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | *Liveness* | A sonda que diz se o processo ainda atende | 22 |
 | *NetworkPolicy* | Regras de quem fala com quem num cluster, por rótulos e portas | 22 |
 | *Readiness* | A sonda que diz se o processo deve receber pedidos novos | 22 |
+| *Red team* | Validação com o objetivo de um atacante, contra o sistema inteiro | 23 |
+| *Roadmap* | Os caminhos do risco residual, na ordem em que fecham mais risco | 23 |
 | *Seccomp* | Filtro das chamadas ao kernel que um processo pode fazer | 18 |
 | *Sidecar* | Contêiner que divide a rede, ou o *pod*, com o principal | 22 |
 | *Slowloris* | Ataque que prende conexões enviando o pedido devagar | 08 |
@@ -58,6 +60,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Cabeça | O hash da última entrada, guardado à parte como âncora | 20 |
 | Cabeçalho de salto a salto | Cabeçalho que vale só entre dois nós, como `Connection` | 08 |
 | Cabeçalho espelhado | Cópia, num cabeçalho HTTP, de um campo do corpo | 09 |
+| Cadeia de ataque | Movimentos encadeados, em que cada um prepara o seguinte | 23 |
 | Cadeia de hashes (*hash chaining*) | Entradas em que cada uma guarda o hash da anterior | 20 |
 | Cadeia de suprimentos (*supply chain*) | Tudo o que entra num programa antes de ele rodar | 21 |
 | Camada anticorrupção | Camada que traduz entre o protocolo externo e o domínio | 07 |
@@ -69,6 +72,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Caso de uso | Operação da aplicação, como `InterceptCall` | 05 |
 | Categoria geral | Classificação Unicode de cada ponto de código, como `Cf` ou `Mn` | 11 |
 | Chamada de ferramentas | Ciclo em que o modelo pede uma ferramenta e recebe o resultado como mensagem | 01 |
+| Changelog | As mudanças de cada versão, por tipo | 23 |
 | Chave duplicada | Mesmo nome duas vezes num objeto JSON, com leitura imprevisível | 07 |
 | Checkpoint | A cabeça da trilha assinada, no desafio do Módulo 20 | 20 |
 | CI | Integração contínua: compilação e testes automáticos a cada push, no GitHub Actions | 01 |
@@ -76,6 +80,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Comparação em tempo constante | Comparação cujo tempo não depende de onde os valores diferem | 13 |
 | Concessão | A decisão dada a um agente, num servidor, para uma ferramenta | 12 |
 | Confiança no primeiro uso | Aceitar e fixar o que se vê da primeira vez, e comparar depois | 10 |
+| Configuração em falha fechada | Regra pela qual uma opção que o modo não aplica impede a partida | 23 |
 | Confusão de algoritmo | Aceitar o algoritmo que o atacante escreveu no cabeçalho | 09 |
 | Conjunto de desenvolvimento | Exemplos usados para ajustar o *prompt* e escolher o limiar | 16 |
 | Conjunto de métodos | Métodos que pertencem a `T` ou a `*T`; decide a satisfação de interfaces | 03 |
@@ -89,6 +94,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Corpus de ataques | Conjunto de entradas em arquivos, cada uma com o resultado esperado | 11 |
 | Corpus de sementes | Entradas iniciais do fuzzing, de `f.Add` e de `testdata/fuzz` | 07 |
 | Corrida de dados | Acesso concorrente sem ordem a um valor, com ao menos uma escrita | 06 |
+| Costura | Ponto em que uma defesa supõe outra que não existe naquele caminho | 23 |
 | Cota | Limite de chamadas ou de custo por agente e ferramenta | 19 |
 | CSRF | Pedido disparado por outra página, com a credencial que o navegador manda sozinho | 08 |
 | Decorador | Componente com o mesmo contrato do que ele envolve, e um comportamento a mais | 19 |
@@ -110,10 +116,12 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Enumeração completa | Teste que percorre todos os valores de um tipo enumerado | 04 |
 | Envenenamento de ferramenta (*tool poisoning*) | Instrução hostil escondida nos metadados de uma ferramenta, que o modelo lê | 01 |
 | Erro de ferramenta | Resultado com `isError`, que o modelo vê como falha da chamada e pode corrigir | 15 |
+| Erro de protocolo | Erro JSON-RPC, no lugar do resultado | 23 |
 | Erro sentinela | Valor de erro declarado no pacote e comparado por identidade | 03 |
 | Espião (*spy*) | Dublê de teste que registra as chamadas que recebe, para o teste conferi-las | 05 |
 | Estado terminal | Estado sem saída: o pedido já foi decidido | 13 |
 | Etapa | Um inspetor da ida, um da volta ou o marcador, com um nome no registro | 17 |
+| Evidência | O que um teste mostra, com as opções e a versão em que roda | 23 |
 | Evidência de adulteração | Propriedade de um registro em que qualquer mudança aparece na verificação | 20 |
 | Exemplo testável | Função `Example` cuja saída o `go test` confere | 03 |
 | Exfiltração | Levar para fora, pelos argumentos de uma chamada, um dado que não deveria sair | 14 |
@@ -207,12 +215,14 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Rego | A linguagem declarativa de políticas do OPA | 12 |
 | Regra completa | Regra que define um único valor para um nome | 12 |
 | Regra de dependência | Dependências de código apontam para o núcleo | 05 |
+| Regressão integrada | Suíte que roda as defesas juntas, como a produção as monta | 23 |
 | Relógio monotônico | Relógio que só anda para a frente, imune aos acertos do sistema | 19 |
 | Repositório | Porta que esconde onde e como os dados ficam | 10 |
 | Restrição | Interface que diz o que o parâmetro de tipo precisa ter, como `any` ou `comparable` | 17 |
 | Restrição de compilação | Linha `//go:build` que decide se um arquivo entra no pacote | 06 |
 | Resumo do modelo | O SHA-256 que identifica o arquivo do modelo, ao contrário do nome | 16 |
 | Revocação | Fração dos ataques que foram barrados | 16 |
+| Risco residual | O que sobra das defesas, com motivo e caminho | 23 |
 | Runa | Valor de um ponto de código Unicode em Go, um `int32` | 11 |
 | SBOM | Lista de materiais de software: os componentes de um artefato, com as versões | 21 |
 | Semente fixa | Valor inicial do gerador que torna os casos reprodutíveis | 14 |
