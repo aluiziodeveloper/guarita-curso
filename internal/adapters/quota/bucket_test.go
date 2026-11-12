@@ -42,26 +42,34 @@ func TestBucket_rajada(t *testing.T) {
 	})
 }
 
-// 64 goroutines tiram fichas ao mesmo tempo de um balde de 1000: passam
-// exatamente 1000, nem uma a mais. Sem o compare-and-swap, duas
-// goroutines tirariam a mesma ficha.
+// 64 goroutines, soltas juntas, pedem 64 000 fichas a um balde de
+// 32 000: passam exatamente 32 000, nem uma a mais. Sem o
+// compare-and-swap, duas goroutines que leram o mesmo instante
+// gravariam a mesma conta, e uma ficha sairia duas vezes. A largada
+// única e o balde grande mantêm a disputa por milhares de retiradas:
+// um balde pequeno esvazia antes de as goroutines se encontrarem.
 func TestBucket_concorrencia(t *testing.T) {
+	const workers, each = 64, 1000
 	synctest.Test(t, func(t *testing.T) {
-		b := NewBucket(rate(t, "1000/h"))
+		b := NewBucket(rate(t, "32000/h"))
 		var allowed atomic.Int64
 		var wg sync.WaitGroup
-		for range 64 {
+		start := make(chan struct{})
+		for range workers {
 			wg.Go(func() {
-				for range 100 {
+				<-start
+				for range each {
 					if ok, _ := b.Take(1); ok {
 						allowed.Add(1)
 					}
 				}
 			})
 		}
+		close(start)
 		wg.Wait()
-		t.Logf("64 goroutines × 100: %d passaram", allowed.Load())
-		if allowed.Load() != 1000 {
+		t.Logf("%d goroutines × %d: %d passaram", workers, each,
+			allowed.Load())
+		if allowed.Load() != workers*each/2 {
 			t.Errorf("passaram %d", allowed.Load())
 		}
 	})
