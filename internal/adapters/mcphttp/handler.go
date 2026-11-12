@@ -90,6 +90,7 @@ func NewHandler(
 			r.SetURL(upstream)
 			r.Out.URL.Path = upstream.Path
 			r.Out.URL.RawPath = upstream.RawPath
+			r.Out.Header = allowedHeaders(r.Out.Header)
 		},
 		ErrorHandler: proxyError,
 	}
