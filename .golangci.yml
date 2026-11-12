@@ -3,6 +3,7 @@ version: "2"
 linters:
   default: none
   enable:
+    - depguard
     - errcheck
     - exhaustive
     - gosec
@@ -11,6 +12,30 @@ linters:
     - staticcheck
     - unused
   settings:
+    depguard:
+      rules:
+        # O domínio só usa a biblioteca padrão, e dela nada que faça I/O.
+        domain:
+          list-mode: strict
+          files:
+            - "**/internal/domain/*.go"
+            - "!$test"
+          allow:
+            - $gostd
+          deny:
+            - pkg: net
+              desc: o domínio não abre conexões
+            - pkg: os
+              desc: o domínio não toca o sistema
+        # Os casos de uso dependem do domínio, nunca de adaptadores.
+        app:
+          list-mode: strict
+          files:
+            - "**/internal/app/*.go"
+            - "!$test"
+          allow:
+            - $gostd
+            - github.com/aluiziodeveloper/guarita-curso/internal/domain
     exhaustive:
       # Um default não dispensa os casos: todo valor declarado precisa
       # aparecer no switch.
