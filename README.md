@@ -203,6 +203,19 @@ Se o servidor mudar a definição de uma ferramenta já fixada (nome, descriçã
 
 As migrações do banco ficam em `internal/adapters/sqlitestore/migrations` e são aplicadas ao abrir, em ordem, com a versão em `PRAGMA user_version`.
 
+## Vários servidores e varredura das definições
+
+A partir do Módulo 11, a Guarita protege vários servidores ao mesmo tempo. Cada um recebe um namespace escolhido pelo operador e fica em `/mcp/{namespace}`; `-upstream` continua valendo em `/mcp`:
+
+```bash
+./guarita -allow read_file -catalog catalog.db \
+  -server files=http://127.0.0.1:9001/mcp -server mail=http://127.0.0.1:9002/mcp
+```
+
+O namespace tem de 1 a 32 caracteres em `[a-z0-9-]`. Cada servidor é um recurso protegido próprio: o *token* do agente precisa ter na audiência o endereço daquele caminho, e os metadados ficam em `/.well-known/oauth-protected-resource/mcp/{namespace}`.
+
+Com `-catalog`, toda definição passa antes por uma varredura estrutural: é recusada a que tem caracteres de formatação (largura zero, controles de direção, *tags* Unicode), caracteres de controle, texto que muda sob NFKC ou nome fora do conjunto da especificação (`[A-Za-z0-9_.-]`, até 128 caracteres). Uma ferramenta cujo nome, ignorando maiúsculas e trocando `-` e `.` por `_`, já foi fixado por outro servidor também é recusada. Cada recusa aparece no registro com o servidor, a ferramenta, o motivo e os sinais.
+
 ## Ataques de laboratório
 
 O diretório [`attacks/`](attacks/README.md) reúne os ataques reproduzíveis, um pacote por ataque, cada um com o teste que o roda sem e com a defesa. Eles rodam com o resto da suíte em `go test ./...`.
