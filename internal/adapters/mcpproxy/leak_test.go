@@ -34,7 +34,7 @@ func TestRelay_paraQuandoOContextoTermina(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	done := make(chan error, 1)
 	go func() {
-		_, err := Relay(ctx, p.agent, p.server)
+		_, err := Relay(ctx, p.agent, p.server, nil)
 		done <- err
 	}()
 
@@ -61,7 +61,7 @@ func TestRelay_servidorParadoNaoAcumulaGoroutines(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	done := make(chan struct{})
 	go func() {
-		_, _ = Relay(ctx, p.agent, p.server)
+		_, _ = Relay(ctx, p.agent, p.server, nil)
 		close(done)
 	}()
 	time.Sleep(20 * time.Millisecond) // o Relay inicia o próprio grupo
