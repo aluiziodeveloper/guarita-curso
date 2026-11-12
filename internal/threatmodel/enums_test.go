@@ -1,7 +1,8 @@
-package domain
+package threatmodel
 
 import (
 	"errors"
+	"strings"
 	"testing"
 )
 
@@ -167,12 +168,8 @@ func assertEnumValidation(
 	if !errors.Is(err, kind) {
 		t.Fatalf("errors.Is(%v, %v) = false", err, kind)
 	}
-	var validationError *ValidationError
-	if !errors.As(err, &validationError) {
-		t.Fatalf("error type = %T; want *ValidationError", err)
-	}
-	if got := validationError.Field(); got != field {
-		t.Errorf("Field() = %q; want %q", got, field)
+	if !strings.HasPrefix(err.Error(), field+": ") {
+		t.Errorf("Error() = %q; want prefix %q", err, field+": ")
 	}
 }
 
