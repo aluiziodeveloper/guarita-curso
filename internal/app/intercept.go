@@ -76,14 +76,16 @@ func (uc *InterceptCall) checkCatalog(
 
 // InterceptCall é o caso de uso que fica entre o agente e o servidor.
 type InterceptCall struct {
-	policy     PolicyEvaluator
-	upstream   Upstream
-	catalog    ToolCatalog
-	server     string
-	agent      func(context.Context) string
-	approver   Approver
-	inspectors []Inspector
-	findings   FindingsObserver
+	policy           PolicyEvaluator
+	upstream         Upstream
+	catalog          ToolCatalog
+	server           string
+	agent            func(context.Context) string
+	approver         Approver
+	inspectors       []Inspector
+	findings         FindingsObserver
+	resultInspectors []ResultInspector
+	marker           ResultMarker
 }
 
 // NewInterceptCall recebe as portas de que o caso de uso precisa. As
