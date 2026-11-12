@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -145,11 +146,16 @@ func TestRun_servePorHTTP(t *testing.T) {
 }
 
 // startHTTP roda a Guarita e devolve o endpoint que ela anuncia na
-// saída de erro, que também recebe o registro estruturado.
+// saída de erro, que também recebe o registro estruturado. Sem
+// -agent-key, o teste pede o laboratório sem token por escrito, como
+// qualquer operador desde o Módulo 22.
 func startHTTP(
 	t *testing.T, ctx context.Context, args ...string,
 ) (string, <-chan error) {
 	t.Helper()
+	if !slices.Contains(args, "-agent-key") {
+		args = append([]string{"-insecure-no-auth"}, args...)
+	}
 	stderrR, stderrW := io.Pipe()
 	done := make(chan error, 1)
 	go func() {
