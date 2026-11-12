@@ -24,21 +24,25 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | ADR | Registro de decisão de arquitetura: uma decisão, com o contexto e as consequências | 01 |
 | Agente | Aplicação que coordena o modelo e as conexões com servidores MCP | 01 |
 | Agência excessiva | O agente tem ferramentas, permissões ou autonomia além do que a tarefa exige | 12 |
+| Aprovação forjada | Uma aprovação registrada sem a decisão de um operador | 13 |
 | Arquitetura hexagonal (*hexagonal architecture*) | Núcleo isolado da infraestrutura, conversando por portas | 05 |
 | Arquivo *golden* | Arquivo com a saída esperada de um teste, regravado de propósito | 07 |
 | Ativo | O que a Guarita precisa proteger | 04 |
 | Audiência (`aud`) | Recurso para o qual o token foi emitido | 09 |
+| Bolha | O grupo de goroutines de `synctest.Test`, com relógio falso | 13 |
 | Build em múltiplos estágios | Dockerfile que compila num estágio e copia só o resultado para outro | 01 |
 | Cabeçalho de salto a salto | Cabeçalho que vale só entre dois nós, como `Connection` | 08 |
 | Cabeçalho espelhado | Cópia, num cabeçalho HTTP, de um campo do corpo | 09 |
 | Camada anticorrupção | Camada que traduz entre o protocolo externo e o domínio | 07 |
 | Canal | Cano tipado entre goroutines, que também sincroniza | 06 |
+| Capacidade (de acesso) | Um valor cuja posse já dá acesso, como um identificador que não se adivinha | 13 |
 | Caractere de formatação | Ponto de código `Cf`: não desenha nada, ou muda o que está em volta | 11 |
 | Caso de uso | Operação da aplicação, como `InterceptCall` | 05 |
 | Categoria geral | Classificação Unicode de cada ponto de código, como `Cf` ou `Mn` | 11 |
 | Chamada de ferramentas | Ciclo em que o modelo pede uma ferramenta e recebe o resultado como mensagem | 01 |
 | Chave duplicada | Mesmo nome duas vezes num objeto JSON, com leitura imprevisível | 07 |
 | CI | Integração contínua: compilação e testes automáticos a cada push, no GitHub Actions | 01 |
+| Comparação em tempo constante | Comparação cujo tempo não depende de onde os valores diferem | 13 |
 | Concessão | A decisão dada a um agente, num servidor, para uma ferramenta | 12 |
 | Confiança no primeiro uso | Aceitar e fixar o que se vê da primeira vez, e comparar depois | 10 |
 | Confusão de algoritmo | Aceitar o algoritmo que o atacante escreveu no cabeçalho | 09 |
@@ -61,7 +65,9 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Envenenamento de ferramenta (*tool poisoning*) | Instrução hostil escondida nos metadados de uma ferramenta, que o modelo lê | 01 |
 | Erro sentinela | Valor de erro declarado no pacote e comparado por identidade | 03 |
 | Espião (*spy*) | Dublê de teste que registra as chamadas que recebe, para o teste conferi-las | 05 |
+| Estado terminal | Estado sem saída: o pedido já foi decidido | 13 |
 | Exemplo testável | Função `Example` cuja saída o `go test` confere | 03 |
+| Fadiga de aprovação (*approval fatigue*) | O operador aprova por cansaço, depois de pedidos repetidos | 13 |
 | Falha fechada (*fail closed*) | Negar em vez de permitir diante do imprevisto ou quando a defesa não consegue decidir | 05 |
 | Fechamento | Função que captura variáveis do escopo em que foi criada | 01 |
 | Ferramenta | Capacidade anunciada por um servidor MCP, com nome, descrição e esquema | 01 |
@@ -83,6 +89,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Migração | Passo numerado de mudança no esquema do banco | 10 |
 | Modelo de ameaças | Documento versionado com ativos, zonas, fronteiras e ameaças, mantido junto do código | 04 |
 | Modelo de domínio anêmico | Tipos com nomes de negócio e pouco ou nenhum comportamento próprio | 03 |
+| Máquina de estados | Conjunto fechado de estados e das transições permitidas entre eles | 13 |
 | Módulo | Unidade Go que declara caminho, versão mínima e dependências | 01 |
 | Namespace (de servidor) | Nome que o operador dá a um servidor, e o caminho dele na Guarita | 11 |
 | Negação por padrão | Tudo é negado, salvo o que for concedido | 12 |
@@ -98,10 +105,13 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | PEM | Texto em Base64 entre marcadores, com a chave em PKIX ou PKCS #8 | 09 |
 | PEP | Ponto que intercepta a chamada e aplica a decisão: o `InterceptCall` | 12 |
 | Pin (*pinning*) | Definição fixada de uma ferramenta num servidor | 10 |
+| Plano do agente | O endpoint MCP e os tokens dos agentes | 13 |
+| Plano do operador | A interface de aprovação e as credenciais dos operadores | 13 |
 | Políticas como código (*policy as code*) | Regras de autorização versionadas, revisadas e testadas como o resto do código | 12 |
 | Porta | Conversa com propósito, expressa como interface do caso de uso | 05 |
 | Portas e adaptadores (*ports and adapters*) | Outro nome da arquitetura hexagonal: o núcleo fala com o mundo por portas, e cada tecnologia é um adaptador | 05 |
 | Proxy reverso | Servidor que recebe pedidos em nome de outro e os repassa | 08 |
+| Quórum | Número de operadores diferentes exigido para aprovar | 13 |
 | Raiz de composição | O ponto, em `cmd/guarita`, que escolhe e monta os adaptadores | 05 |
 | Receptor | Parâmetro que associa um método a um tipo, por valor ou por ponteiro | 03 |
 | Rego | A linguagem declarativa de políticas do OPA | 12 |
