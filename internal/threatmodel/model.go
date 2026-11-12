@@ -88,6 +88,10 @@ func Model() []Threat {
 		threat("approval-forgery",
 			"Aprovação forjada ou obtida por fadiga",
 			edge(operator, out), 13, spoofing, repudiation),
+		threat("dns-rebinding",
+			"Página da web alcança a Guarita local por DNS rebinding",
+			edge(agent, out), 8, spoofing, elevationOfPrivilege,
+		).with(ThreatStatusPartiallyMitigated),
 	}
 }
 
