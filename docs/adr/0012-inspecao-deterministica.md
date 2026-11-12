@@ -36,3 +36,7 @@ A política decide quem chama o quê, e a aprovação põe uma pessoa diante das
 ## Revisão do Módulo 23
 
 O *red team* mostrou que o modo stdio aceitava `-dlp` sem aplicá-lo. Desde a ADR 0021, o stdio monta a mesma linha de ida, e a consequência “o transporte stdio ainda não tem inspetores” deixa de valer para os argumentos.
+
+## Revisão depois do curso
+
+A revisão das aulas achou uma brecha no item 3: `\d` e os prefixos de chave só casam com ASCII, e um CPF escrito com dígitos de largura total (U+FF10 a U+FF19) passava pelo DLP, embora um servidor que normalize o texto o leia como CPF. O inspetor passa a examinar cada texto duas vezes, como foi escrito e na forma NFKC (`golang.org/x/text/unicode/norm`, que já estava no módulo pelo varredor de definições), e junta os achados. As duas formas valem porque a normalização também pode esconder: um dígito de largura total colado num CPF vira um número de doze dígitos. Os argumentos não são reescritos, pela mesma razão da alternativa 2. Fica de fora o que a NFKC não converte: dígitos de outras escritas, como os arábico-índicos, continuam passando.

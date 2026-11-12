@@ -88,3 +88,49 @@ func TestInspect_detectores(t *testing.T) {
 		}
 	}
 }
+
+// fullwidth troca cada caractere ASCII visível pela forma de largura
+// total (U+FF01 a U+FF5E): para quem lê, e para o servidor que
+// normaliza, é o mesmo texto; para \d e para os prefixos, não.
+func fullwidth(text string) string {
+	return strings.Map(func(r rune) rune {
+		if '!' <= r && r <= '~' {
+			return r + 0xFEE0
+		}
+		return r
+	}, text)
+}
+
+// O dado escrito com dígitos e letras de largura total é achado como
+// o escrito em ASCII: o inspetor normaliza com NFKC e examina as duas
+// formas. A forma original continua valendo: um dígito de largura
+// total colado no CPF não o esconde.
+func TestInspect_larguraTotal(t *testing.T) {
+	cpf := withChecks("123456789")
+	formatted := cpf[:3] + "." + cpf[3:6] + "." + cpf[6:9] + "-" + cpf[9:]
+	approve, deny := domain.DecisionRequireApproval, domain.DecisionDeny
+	for _, c := range []struct {
+		name, text string
+		want       domain.Decision
+	}{
+		{"CPF de largura total", fullwidth(cpf), approve},
+		{"CPF formatado", fullwidth(formatted), approve},
+		{"só os dígitos", "cliente " + fullwidth(cpf[:6]) + cpf[6:], approve},
+		{"dígito colado", fullwidth("1") + cpf, approve},
+		{"chave AWS", fullwidth(awsKey), deny},
+		{
+			"verificador errado", fullwidth("12345678900"),
+			domain.DecisionAllow,
+		},
+	} {
+		arguments, _ := json.Marshal(map[string]string{"body": c.text})
+		got := inspect(t, string(arguments))
+		t.Logf("%-22s %-16s %v", c.name, got.Decision, got.Findings)
+		if got.Decision != c.want {
+			t.Errorf("%s: %s; want %s", c.name, got.Decision, c.want)
+		}
+		if len(got.Findings) > 1 {
+			t.Errorf("%s: achado repetido: %v", c.name, got.Findings)
+		}
+	}
+}
