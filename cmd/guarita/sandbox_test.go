@@ -65,3 +65,23 @@ func TestSandbox_perfil(t *testing.T) {
 		t.Error("sem -sandbox, não há perfil")
 	}
 }
+
+// Sem a home, as pastas de credenciais dela não têm como ser
+// conferidas: com HOME vazia ou relativa, a montagem não sobe. Sem
+// montagens, não há o que conferir, e o perfil sai.
+func TestSandbox_homeIndeterminada(t *testing.T) {
+	data := t.TempDir()
+	for _, home := range []string{"", "operador"} {
+		t.Setenv("HOME", home)
+		_, err := sandboxProfile("-sandbox", "img", "-sandbox-mount",
+			data+":/data", "--", "/srv")
+		t.Logf("HOME=%q: %v", home, err)
+		if !errors.Is(err, errSandboxHome) {
+			t.Errorf("HOME=%q: %v; quer errSandboxHome", home, err)
+		}
+		if _, err := sandboxProfile("-sandbox", "img", "--",
+			"/srv"); err != nil {
+			t.Errorf("HOME=%q, sem montagens: %v", home, err)
+		}
+	}
+}

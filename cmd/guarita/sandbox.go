@@ -3,7 +3,9 @@ package main
 import (
 	"errors"
 	"flag"
+	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/sandbox"
@@ -14,6 +16,8 @@ var (
 		"-sandbox-mount must be source:target or source:target:rw")
 	errSandboxMode = errors.New(
 		"-sandbox is for a stdio server, after --; HTTP servers are remote")
+	errSandboxHome = errors.New("-sandbox-mount needs the home " +
+		"directory to check the credential folders")
 )
 
 // defenseFlags declara as opções das defesas dos Módulos 13 a 22: a
@@ -58,12 +62,20 @@ func sandboxFlags(flags *flag.FlagSet, c *sandboxConfig) {
 
 // profile monta o perfil da sandbox, com cada montagem conferida pelo
 // caminho real. Sem -sandbox, não há perfil, e o servidor roda no host.
+// Sem a home, uma montagem não sobe: as pastas de credenciais dela
+// ficariam fora da conferência.
 func (c sandboxConfig) profile() (*sandbox.Profile, error) {
 	if c.image == "" {
 		return nil, nil
 	}
-	home, _ := os.UserHomeDir()
 	p := sandbox.Default(c.image)
+	if len(c.mounts) == 0 {
+		return &p, p.Validate()
+	}
+	home, err := userHome()
+	if err != nil {
+		return nil, err
+	}
 	for _, m := range c.mounts {
 		checked, err := sandbox.CheckMount(m, home)
 		if err != nil {
@@ -72,4 +84,18 @@ func (c sandboxConfig) profile() (*sandbox.Profile, error) {
 		p.Mounts = append(p.Mounts, checked)
 	}
 	return &p, p.Validate()
+}
+
+// userHome é a home do usuário, por um caminho absoluto. Vazia ou
+// relativa, não serve para conferir as montagens.
+func userHome() (string, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", fmt.Errorf("%w: %w", errSandboxHome, err)
+	}
+	if !filepath.IsAbs(home) {
+		return "", fmt.Errorf("%w: %q is not absolute", errSandboxHome,
+			home)
+	}
+	return home, nil
 }
