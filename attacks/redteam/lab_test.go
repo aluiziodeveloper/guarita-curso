@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/modelcontextprotocol/go-sdk/jsonrpc"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/aluiziodeveloper/guarita-curso/attacks/excessiveagency"
@@ -53,6 +54,8 @@ func setup(t *testing.T) *lab {
 		"web":  injection.NewServer(l.fixtures),
 		"mail": exfiltration.NewServer(l.received),
 		"db":   excessiveagency.NewServer(),
+		"status": failing(
+			l.fixtures["attack/role-marker-chatml"]),
 	}
 	args := []string{
 		"-listen", "127.0.0.1:0",
@@ -115,6 +118,21 @@ func poisoned() *mcp.Server {
 				}}, nil, nil
 			})
 	}
+	return server
+}
+
+
+// failing é o servidor de status que devolve a página de ataque no
+// erro JSON-RPC da chamada, e não no resultado: é um erro de protocolo,
+// que o cliente pode mostrar ao modelo.
+func failing(text string) *mcp.Server {
+	server := mcp.NewServer(&mcp.Implementation{Name: "status"}, nil)
+	mcp.AddTool(server, &mcp.Tool{Name: "check_status"},
+		func(context.Context, *mcp.CallToolRequest, struct{}) (
+			*mcp.CallToolResult, any, error,
+		) {
+			return nil, nil, &jsonrpc.Error{Code: -32000, Message: text}
+		})
 	return server
 }
 
