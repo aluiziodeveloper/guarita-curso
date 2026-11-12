@@ -31,11 +31,13 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Arquivo *golden* | Arquivo com a saída esperada de um teste, regravado de propósito | 07 |
 | Ativo | O que a Guarita precisa proteger | 04 |
 | Audiência (`aud`) | Recurso para o qual o token foi emitido | 09 |
+| Benchmark | Medida repetida do custo de um trecho de código, com `testing.B` | 17 |
 | Bolha | O grupo de goroutines de `synctest.Test`, com relógio falso | 13 |
 | Build em múltiplos estágios | Dockerfile que compila num estágio e copia só o resultado para outro | 01 |
 | Cabeçalho de salto a salto | Cabeçalho que vale só entre dois nós, como `Connection` | 08 |
 | Cabeçalho espelhado | Cópia, num cabeçalho HTTP, de um campo do corpo | 09 |
 | Camada anticorrupção | Camada que traduz entre o protocolo externo e o domínio | 07 |
+| Camada exigida | Etapa que toda rota precisa ter, conferida na partida | 17 |
 | Caminho de volta | O resultado de uma chamada, do servidor até o agente | 15 |
 | Canal | Cano tipado entre goroutines, que também sincroniza | 06 |
 | Capacidade (de acesso) | Um valor cuja posse já dá acesso, como um identificador que não se adivinha | 13 |
@@ -61,6 +63,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Corpus de sementes | Entradas iniciais do fuzzing, de `f.Add` e de `testdata/fuzz` | 07 |
 | Corrida de dados | Acesso concorrente sem ordem a um valor, com ao menos uma escrita | 06 |
 | CSRF | Pedido disparado por outra página, com a credencial que o navegador manda sozinho | 08 |
+| Defesa em profundidade (*defense in depth*) | Camadas no caminho do ataque, de modo que o que uma não pega outra pegue | 17 |
 | Delimitador aleatório | Delimitador com identificador sorteado a cada resposta | 15 |
 | DLP | Prevenção contra vazamento de dados: regras que acham dados sensíveis no que sai | 14 |
 | DNS rebinding | Troca do endereço por trás de um nome para alcançar um serviço local na mesma origem | 08 |
@@ -78,6 +81,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Erro sentinela | Valor de erro declarado no pacote e comparado por identidade | 03 |
 | Espião (*spy*) | Dublê de teste que registra as chamadas que recebe, para o teste conferi-las | 05 |
 | Estado terminal | Estado sem saída: o pedido já foi decidido | 13 |
+| Etapa | Um inspetor da ida, um da volta ou o marcador, com um nome no registro | 17 |
 | Exemplo testável | Função `Example` cuja saída o `go test` confere | 03 |
 | Exfiltração | Levar para fora, pelos argumentos de uma chamada, um dado que não deveria sair | 14 |
 | Fadiga de aprovação (*approval fatigue*) | O operador aprova por cansaço, depois de pedidos repetidos | 13 |
@@ -93,12 +97,14 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Goroutine | Função executando de forma independente, gerida pelo runtime de Go | 06 |
 | Impressão digital | SHA-256 da forma canônica da definição | 10 |
 | Indefinido | O estado de uma regra cujo corpo não vale | 12 |
+| Inferência de tipos | O compilador deduzir o parâmetro de tipo pelos argumentos | 17 |
 | Injeção indireta (*indirect prompt injection*) | Instrução para o modelo que chega no conteúdo que uma ferramenta devolve | 15 |
 | Inspetor | Etapa que examina o conteúdo de uma chamada depois da política | 14 |
 | Inversão de dependência | O núcleo declara a interface; a infraestrutura a satisfaz | 05 |
 | JSON-RPC | Formato de chamada remota em JSON usado por todas as mensagens MCP | 01 |
 | JWT | Token com afirmações assinadas, em três partes | 09 |
 | Limiar | Pontuação a partir da qual o resultado é barrado | 16 |
+| Linha de inspetores | As etapas de uma rota, na ordem em que o caso de uso as consulta | 17 |
 | Lista de destinos | Os hosts para onde uma URL nos argumentos pode apontar | 14 |
 | Lista de permissão | Regra que só aceita o que foi declarado; o resto fica de fora até ser ligado | 05 |
 | Log-probabilidade | Logaritmo natural da probabilidade de um token numa posição | 16 |
@@ -122,6 +128,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Orçamento de falsos positivos | A FPR máxima aceita, fixada antes da medida | 16 |
 | Pacote de teste externo | Pacote `x_test` que só enxerga a API exportada de `x` | 03 |
 | Parser estrito | Parser que recusa a mensagem inteira diante de qualquer ambiguidade | 07 |
+| Parâmetro de tipo | Tipo que uma função genérica recebe, entre colchetes | 17 |
 | Parâmetro variádico | Último parâmetro `...T`, recebido como fatia | 04 |
 | PDP | Ponto que decide: o OPA com as regras de `policies/` | 12 |
 | Pedido | Mensagem JSON-RPC com `method` e `id`, que espera resposta | 07 |
@@ -135,16 +142,19 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Porta | Conversa com propósito, expressa como interface do caso de uso | 05 |
 | Portas e adaptadores (*ports and adapters*) | Outro nome da arquitetura hexagonal: o núcleo fala com o mundo por portas, e cada tecnologia é um adaptador | 05 |
 | Precisão | Fração dos barrados que eram ataque | 16 |
+| Princípio aberto/fechado | Aberto para extensão, fechado para modificação | 17 |
 | Proxy reverso | Servidor que recebe pedidos em nome de outro e os repassa | 08 |
 | Quórum | Número de operadores diferentes exigido para aprovar | 13 |
 | Raiz de composição | O ponto, em `cmd/guarita`, que escolhe e monta os adaptadores | 05 |
 | RE2 | Sintaxe de expressões regulares com tempo de execução linear | 14 |
 | Receptor | Parâmetro que associa um método a um tipo, por valor ou por ponteiro | 03 |
 | Refatoração | Mudança de estrutura que mantém o comportamento, com os testes como prova | 15 |
+| Registro de etapas | Mapa de nome para fábrica; uma etapa nova é uma entrada nova | 17 |
 | Rego | A linguagem declarativa de políticas do OPA | 12 |
 | Regra completa | Regra que define um único valor para um nome | 12 |
 | Regra de dependência | Dependências de código apontam para o núcleo | 05 |
 | Repositório | Porta que esconde onde e como os dados ficam | 10 |
+| Restrição | Interface que diz o que o parâmetro de tipo precisa ter, como `any` ou `comparable` | 17 |
 | Restrição de compilação | Linha `//go:build` que decide se um arquivo entra no pacote | 06 |
 | Resumo do modelo | O SHA-256 que identifica o arquivo do modelo, ao contrário do nome | 16 |
 | Revocação | Fração dos ataques que foram barrados | 16 |
@@ -158,6 +168,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Sombreamento de ferramenta (*tool shadowing*) | Um servidor anuncia uma ferramenta com o nome que outro já usa | 11 |
 | STRIDE | Seis categorias de ameaça, cada uma ligada a uma propriedade de segurança | 04 |
 | Suíte de ataques | Testes que rodam cada ataque sem e com a defesa | 10 |
+| Teste de camada ausente | Ablação: tirar uma camada de cada vez e ver o que passa | 17 |
 | Teste de consistência | Teste que compara um documento de projeto com os dados do código | 04 |
 | Teste de contrato | Teste do comportamento visível de uma interface, pedido a pedido | 08 |
 | Teste de propriedade | Teste que afirma algo sobre uma família de casos e o confere em casos gerados | 14 |
