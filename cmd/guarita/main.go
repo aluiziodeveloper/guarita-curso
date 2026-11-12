@@ -22,6 +22,7 @@ const usage = "uso: guarita [-allow ferramenta,… | -policy dir] -- " +
 	"<comando do servidor MCP> [argumentos]\n" +
 	"     guarita approvals [-admin URL] -secret arquivo list|approve|deny\n" +
 	"     guarita digest <comando>\n" +
+	"     guarita audit verify [-head hash] arquivo\n" +
 	"     guarita [-allow … | -policy dir] [-listen endereço] [-host …] " +
 	"[-origin …] [-server nome=URL …] " +
 	"-upstream <URL do servidor MCP>"

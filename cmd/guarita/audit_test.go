@@ -80,3 +80,17 @@ func TestNewLogger_redige(t *testing.T) {
 		t.Error("o registro levou um segredo")
 	}
 }
+
+// Uma trilha de uma entrada sai no singular, e o uso lista o
+// subcomando.
+func TestAudit_contagemEUso(t *testing.T) {
+	if got := entries(1); got != "1 entrada" {
+		t.Errorf("entries(1) = %q", got)
+	}
+	if got := entries(2); got != "2 entradas" {
+		t.Errorf("entries(2) = %q", got)
+	}
+	if !strings.Contains(usage, "guarita audit verify") {
+		t.Errorf("o uso não lista audit verify: %s", usage)
+	}
+}
