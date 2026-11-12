@@ -1,1 +1,1 @@
-{"name":"read_file","description":"Lê um arquivo.","inputSchema":{"type":"object","properties":{"path":{"type":"string"}}}}
+{"name":"read_file","description":"L\u00ea um arquivo.","inputSchema":{"type":"object","properties":{"path":{"type":"string"}}}}
