@@ -9,7 +9,9 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Termo | Significado | Módulo |
 |---|---|---|
 | *Confused deputy* | Componente com privilégio que age em nome de quem não o tem | 04 |
+| *Fixture* | Entrada de teste gravada em arquivo, com o resultado esperado | 15 |
 | *Slowloris* | Ataque que prende conexões enviando o pedido devagar | 08 |
+| *Spotlighting* | Família de técnicas de marcação de procedência para modelos de linguagem | 15 |
 | *Token passthrough* | Repassar ao destino um token que não foi emitido para ele | 09 |
 | `errgroup` | Grupo de goroutines com erro e cancelamento compartilhados | 06 |
 | `fmt.Stringer` | Interface com `String() string`, usada pela formatação | 04 |
@@ -34,6 +36,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Cabeçalho de salto a salto | Cabeçalho que vale só entre dois nós, como `Connection` | 08 |
 | Cabeçalho espelhado | Cópia, num cabeçalho HTTP, de um campo do corpo | 09 |
 | Camada anticorrupção | Camada que traduz entre o protocolo externo e o domínio | 07 |
+| Caminho de volta | O resultado de uma chamada, do servidor até o agente | 15 |
 | Canal | Cano tipado entre goroutines, que também sincroniza | 06 |
 | Capacidade (de acesso) | Um valor cuja posse já dá acesso, como um identificador que não se adivinha | 13 |
 | Caractere de formatação | Ponto de código `Cf`: não desenha nada, ou muda o que está em volta | 11 |
@@ -48,12 +51,14 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Confusão de algoritmo | Aceitar o algoritmo que o atacante escreveu no cabeçalho | 09 |
 | Conjunto de métodos | Métodos que pertencem a `T` ou a `*T`; decide a satisfação de interfaces | 03 |
 | Consulta parametrizada | Texto da consulta e valores enviados separados | 10 |
+| Conteúdo não confiável (*untrusted content*) | Conteúdo que vem de fora, como o resultado de uma ferramenta, e não pode valer como instrução | 15 |
 | Contrabando de mensagem | Segunda mensagem colada depois da primeira na mesma linha | 07 |
 | Contrapressão | Espera que volta até quem envia quando o destino não acompanha | 06 |
 | Corpus de ataques | Conjunto de entradas em arquivos, cada uma com o resultado esperado | 11 |
 | Corpus de sementes | Entradas iniciais do fuzzing, de `f.Add` e de `testdata/fuzz` | 07 |
 | Corrida de dados | Acesso concorrente sem ordem a um valor, com ao menos uma escrita | 06 |
 | CSRF | Pedido disparado por outra página, com a credencial que o navegador manda sozinho | 08 |
+| Delimitador aleatório | Delimitador com identificador sorteado a cada resposta | 15 |
 | DLP | Prevenção contra vazamento de dados: regras que acham dados sensíveis no que sai | 14 |
 | DNS rebinding | Troca do endereço por trás de um nome para alcançar um serviço local na mesma origem | 08 |
 | Dono de goroutine | Código que a inicia, a faz parar e espera o fim dela | 06 |
@@ -66,6 +71,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Entropia de Shannon | Imprevisibilidade de um texto, em bits por caractere | 14 |
 | Enumeração completa | Teste que percorre todos os valores de um tipo enumerado | 04 |
 | Envenenamento de ferramenta (*tool poisoning*) | Instrução hostil escondida nos metadados de uma ferramenta, que o modelo lê | 01 |
+| Erro de ferramenta | Resultado com `isError`, que o modelo vê como falha da chamada e pode corrigir | 15 |
 | Erro sentinela | Valor de erro declarado no pacote e comparado por identidade | 03 |
 | Espião (*spy*) | Dublê de teste que registra as chamadas que recebe, para o teste conferi-las | 05 |
 | Estado terminal | Estado sem saída: o pedido já foi decidido | 13 |
@@ -83,6 +89,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Goroutine | Função executando de forma independente, gerida pelo runtime de Go | 06 |
 | Impressão digital | SHA-256 da forma canônica da definição | 10 |
 | Indefinido | O estado de uma regra cujo corpo não vale | 12 |
+| Injeção indireta (*indirect prompt injection*) | Instrução para o modelo que chega no conteúdo que uma ferramenta devolve | 15 |
 | Inspetor | Etapa que examina o conteúdo de uma chamada depois da política | 14 |
 | Inversão de dependência | O núcleo declara a interface; a infraestrutura a satisfaz | 05 |
 | JSON-RPC | Formato de chamada remota em JSON usado por todas as mensagens MCP | 01 |
@@ -91,6 +98,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Lista de permissão | Regra que só aceita o que foi declarado; o resto fica de fora até ser ligado | 05 |
 | Lote | Array de mensagens JSON-RPC, removido do MCP | 07 |
 | Marcador sintético | Texto fixo do laboratório, sem correspondência com um segredo real | 01 |
+| Marcação de procedência | Delimitar o conteúdo não confiável e dizer de onde ele veio | 15 |
 | Menor privilégio (*least privilege*) | Cada agente opera com o mínimo necessário para a tarefa | 12 |
 | Middleware | `http.Handler` que embrulha outro, como um decorador | 08 |
 | Migração | Passo numerado de mudança no esquema do banco | 10 |
@@ -122,6 +130,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Raiz de composição | O ponto, em `cmd/guarita`, que escolhe e monta os adaptadores | 05 |
 | RE2 | Sintaxe de expressões regulares com tempo de execução linear | 14 |
 | Receptor | Parâmetro que associa um método a um tipo, por valor ou por ponteiro | 03 |
+| Refatoração | Mudança de estrutura que mantém o comportamento, com os testes como prova | 15 |
 | Rego | A linguagem declarativa de políticas do OPA | 12 |
 | Regra completa | Regra que define um único valor para um nome | 12 |
 | Regra de dependência | Dependências de código apontam para o núcleo | 05 |
@@ -132,6 +141,8 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Servidor de autorização | Quem autentica o usuário e emite tokens | 09 |
 | Servidor de recursos | Quem recebe tokens e decide o que eles permitem; a Guarita, para o agente | 09 |
 | Silhueta | O nome em minúsculas ASCII, com hífen e ponto como sublinhado | 11 |
+| Sinal forte | Sinal que um resultado legítimo quase nunca tem; barra | 15 |
+| Sinal fraco | Sinal comum também em resultados legítimos; só é registrado | 15 |
 | Sombreamento de ferramenta (*tool shadowing*) | Um servidor anuncia uma ferramenta com o nome que outro já usa | 11 |
 | STRIDE | Seis categorias de ameaça, cada uma ligada a uma propriedade de segurança | 04 |
 | Suíte de ataques | Testes que rodam cada ataque sem e com a defesa | 10 |
