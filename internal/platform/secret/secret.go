@@ -50,8 +50,9 @@ func (Secret) MarshalJSON() ([]byte, error) {
 
 
 // ReadFile lê um segredo de arquivo, sem espaços nas pontas. O arquivo
-// não pode ser legível pelo grupo nem pelos demais usuários. Permissão
-// e conteúdo vêm do mesmo descritor, sem intervalo entre os dois.
+// não pode ser legível pelos demais usuários, e pelo grupo só na forma
+// de private. Permissão e conteúdo vêm do mesmo descritor, sem
+// intervalo entre os dois.
 func ReadFile(path string) (Secret, error) {
 	//nolint:gosec // G304: o caminho vem da configuração do operador
 	file, err := os.Open(path)
@@ -63,7 +64,7 @@ func ReadFile(path string) (Secret, error) {
 	if err != nil {
 		return Secret{}, err
 	}
-	if mode := info.Mode().Perm(); mode&0o077 != 0 {
+	if mode := info.Mode().Perm(); !private(mode, owner(info)) {
 		return Secret{}, fmt.Errorf("%w: %s has mode %v",
 			ErrPermissions, path, mode)
 	}
@@ -78,3 +79,25 @@ func ReadFile(path string) (Secret, error) {
 	return New(value), nil
 }
 
+
+// private diz se só o processo lê o arquivo. Os demais usuários nunca.
+// O grupo, só na forma em que um orquestrador entrega um segredo a um
+// contêiner que não roda como root: o arquivo é do root, e o grupo é o
+// do próprio processo, como o fsGroup do Kubernetes, que acrescenta a
+// leitura pelo grupo a todo arquivo do volume.
+func private(mode os.FileMode, o fileOwner) bool {
+	if mode&0o007 != 0 {
+		return false
+	}
+	if mode&0o070 == 0 {
+		return true
+	}
+	return o.known && o.uid == 0 && o.gid == os.Getegid()
+}
+
+
+// fileOwner é o dono e o grupo de um arquivo, quando o sistema os diz.
+type fileOwner struct {
+	known    bool
+	uid, gid int
+}
