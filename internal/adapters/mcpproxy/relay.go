@@ -68,7 +68,10 @@ func Relay(
 		closeAll(agent, server) // desbloqueia Read e Write parados
 		return nil
 	})
-	return stats, outcome(ctx, group.Wait())
+	// Em duas linhas: stats só está completo depois de Wait, e a ordem
+	// de avaliação dos operandos de um return não garante isso.
+	err := outcome(ctx, group.Wait())
+	return stats, err
 }
 
 // admit liga a porta à cópia do agente: o que a porta barra não segue,
