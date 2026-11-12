@@ -231,6 +231,24 @@ A política recebe como `input` o agente (o `sub` do *token*), o servidor (o nam
 go run github.com/open-policy-agent/opa@v1.21.1 test -v policies
 ```
 
+## Aprovação humana
+
+A partir do Módulo 13, uma chamada para a qual a política responde `require_approval` espera a decisão de um operador. A aprovação liga com `-operators`, um arquivo com uma linha `nome segredo` por operador (segredo com pelo menos 16 caracteres, arquivo sem leitura para outros usuários):
+
+```bash
+./guarita -policy policies -agent-key agent.pub -agent-issuer https://auth.lab.test \
+  -server db=http://127.0.0.1:9002/mcp -operators operators -admin-listen 127.0.0.1:8081
+```
+
+A interface do operador fica noutra escuta, só em loopback: `http://127.0.0.1:8081/` no navegador (Basic, com o nome e o segredo) ou pela linha de comando:
+
+```bash
+./guarita approvals -admin http://127.0.0.1:8081 -secret ana.secret list
+./guarita approvals -admin http://127.0.0.1:8081 -secret ana.secret approve <ID>
+```
+
+Cada pedido expira em `-approval-timeout` (2 min). Cada agente tem no máximo `-approval-max-pending` pedidos pendentes (3), e a mesma chamada negada por um operador é negada na hora por `-approval-cooldown` (10 min). O agente não decide o próprio pedido, e uma decisão não se repete.
+
 ## Ataques de laboratório
 
 O diretório [`attacks/`](attacks/README.md) reúne os ataques reproduzíveis, um pacote por ataque, cada um com o teste que o roda sem e com a defesa. Eles rodam com o resto da suíte em `go test ./...`.

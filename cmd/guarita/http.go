@@ -32,7 +32,7 @@ const httpShutdownGrace = 5 * time.Second
 // serveHTTP escuta, monta o endpoint e atende até ctx acabar. Aí para
 // de aceitar conexões e espera as chamadas em curso, com prazo.
 func serveHTTP(
-	ctx context.Context, c config, policy app.PolicyEvaluator,
+	ctx context.Context, c config, d deciders,
 	stderr io.Writer,
 ) error {
 	logger := slog.New(slog.NewJSONHandler(stderr, nil))
@@ -41,14 +41,13 @@ func serveHTTP(
 		return err
 	}
 	defer closeStore()
-	listener, err := net.Listen("tcp", c.listen)
+	stopAdmin, err := startAdmin(c.approval, d.queue, stderr)
 	if err != nil {
 		return err
 	}
-	endpoint, err := newEndpoint(c, policy, store,
-		listener.Addr().String(), logger)
+	defer stopAdmin()
+	listener, endpoint, err := listen(c, d, store, logger)
 	if err != nil {
-		_ = listener.Close()
 		return err
 	}
 	server := newServer(endpoint)
@@ -59,6 +58,24 @@ func serveHTTP(
 	return shutdown(ctx, server, served)
 }
 
+
+// listen abre a escuta do agente e monta o endpoint para o endereço
+// que ela recebeu.
+func listen(
+	c config, d deciders, store app.CatalogStore, logger *slog.Logger,
+) (net.Listener, http.Handler, error) {
+	listener, err := net.Listen("tcp", c.listen)
+	if err != nil {
+		return nil, nil, err
+	}
+	endpoint, err := newEndpoint(c, d, store, listener.Addr().String(),
+		logger)
+	if err != nil {
+		_ = listener.Close()
+		return nil, nil, err
+	}
+	return listener, endpoint, nil
+}
 
 // newServer dá ao servidor os prazos de conexão. Sem WriteTimeout: ele
 // cortaria os fluxos longos; o prazo de cada chamada fica no handler.
@@ -96,7 +113,7 @@ func shutdown(
 // newEndpoint compõe o endpoint: a guarda na frente de tudo; cada
 // servidor no seu caminho, com identidade, catálogo e metadados.
 func newEndpoint(
-	c config, policy app.PolicyEvaluator, store app.CatalogStore,
+	c config, d deciders, store app.CatalogStore,
 	addr string, logger *slog.Logger,
 ) (http.Handler, error) {
 	guard, err := newGuard(c, addr)
@@ -106,7 +123,7 @@ func newEndpoint(
 	mux := http.NewServeMux()
 	named := routes{}
 	for _, server := range c.servers {
-		route, metadata, err := newRoute(c, server, policy, store, addr,
+		route, metadata, err := newRoute(c, server, d, store, addr,
 			logger)
 		if err != nil {
 			return nil, err
@@ -127,7 +144,7 @@ func newEndpoint(
 // newRoute monta um servidor: o recurso protegido é o caminho dele, e
 // um token emitido para outro servidor da Guarita não serve aqui.
 func newRoute(
-	c config, server upstreamServer, policy app.PolicyEvaluator,
+	c config, server upstreamServer, d deciders,
 	store app.CatalogStore, addr string, logger *slog.Logger,
 ) (http.Handler, http.Handler, error) {
 	resource := "http://" + addr + server.path()
@@ -141,7 +158,7 @@ func newRoute(
 	if err != nil {
 		return nil, nil, err
 	}
-	handler, err := newHandler(c, server, policy, store, logger)
+	handler, err := newHandler(c, server, d, store, logger)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -193,7 +210,7 @@ func passThrough(next http.Handler) http.Handler { return next }
 
 // newHandler monta o proxy com a credencial da Guarita, se houver.
 func newHandler(
-	c config, server upstreamServer, policy app.PolicyEvaluator,
+	c config, server upstreamServer, d deciders,
 	store app.CatalogStore, logger *slog.Logger,
 ) (*mcphttp.Handler, error) {
 	upstream, err := url.Parse(server.url)
@@ -223,7 +240,9 @@ func newHandler(
 		useCase = append(useCase, app.WithCatalog(catalog))
 		options = append(options, mcphttp.WithCatalog(catalog))
 	}
-	gate := mcpproxy.NewGate(app.NewInterceptCall(policy, nil, useCase...))
+	useCase = append(useCase, d.options()...) // a fila, se houver
+	gate := mcpproxy.NewGate(app.NewInterceptCall(d.policy, nil,
+		useCase...))
 	return mcphttp.NewHandler(upstream, gate, options...)
 }
 
