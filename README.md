@@ -137,7 +137,15 @@ go build -o guarita ./cmd/guarita
 ./guarita -- <comando do servidor MCP> [argumentos]
 ```
 
-A Guarita inicia o servidor como subprocesso, repassa as mensagens nos dois sentidos e termina quando o servidor fecha a saída ou quando recebe SIGINT ou SIGTERM. Neste módulo, o repasse ainda é transparente; a interpretação das mensagens e as decisões de política entram no Módulo 7.
+A Guarita inicia o servidor como subprocesso, repassa as mensagens nos dois sentidos e termina quando o servidor fecha a saída ou quando recebe SIGINT ou SIGTERM.
+
+Desde o Módulo 7, cada mensagem do agente passa por um parser estrito: uma mensagem JSON-RPC 2.0 por linha, sem dados depois dela, sem chave repetida, sem lote e com no máximo 4 MiB. Cada `tools/call` passa pela política antes de chegar ao servidor. A política estática permite só as ferramentas listadas em `-allow`; sem a opção, nenhuma ferramenta é permitida:
+
+```bash
+./guarita -allow read_file,list_dir -- <comando do servidor MCP>
+```
+
+O que for negado ou malformado volta ao agente como erro JSON-RPC e não chega ao servidor.
 
 ## Arquitetura e regra de imports
 
