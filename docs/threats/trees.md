@@ -46,7 +46,7 @@ A raiz é um nó **E**: basta cortar um dos quatro ramos para o ataque falhar. P
 | `tool-shadowing` | Fazer o agente chamar a ferramenta errada | nome repetido E escolha pela descrição | namespace por servidor e silhueta única no catálogo (Módulo 11) |
 | `indirect-prompt-injection` | Ordenar o agente pela resposta de uma ferramenta | texto hostil na resposta E o modelo obedecer | inspeção e marcação da resposta (Módulo 15) |
 | `excessive-agency` | Executar ação destrutiva permitida por engano | ferramenta perigosa exposta E nenhuma política restringe | menor privilégio por agente e servidor, em Rego (Módulo 12) |
-| `data-exfiltration` | Levar dados sensíveis num argumento | dado sensível no contexto E argumento sem inspeção | DLP nos argumentos (Módulo 14) |
+| `data-exfiltration` | Levar dados sensíveis num argumento | dado sensível no contexto E argumento sem inspeção | DLP, destinos permitidos e esquema nos argumentos (Módulo 14) |
 | `sandbox-escape` | Ler ou alterar o host a partir do servidor | rede aberta OU arquivos montados OU symlink | contêiner restrito (Módulo 18) |
 | `credential-theft` | Usar a credencial da Guarita em nome do agente | *token* do usuário repassado OU credencial compartilhada | credencial por servidor, sem repasse (Módulo 9) |
 | `supply-chain` | Rodar código novo sob uma versão aprovada | pacote atualizado sem verificação | versão fixa e assinatura (Módulo 21) |
