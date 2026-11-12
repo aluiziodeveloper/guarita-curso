@@ -9,6 +9,7 @@ import (
 
 	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/mcpproxy"
 	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/sandbox"
+	"github.com/aluiziodeveloper/guarita-curso/internal/domain"
 )
 
 // stdioServer é o servidor do modo stdio: o comando e, se houver, a
@@ -16,10 +17,11 @@ import (
 type stdioServer struct {
 	command []string
 	sandbox sandboxConfig
+	digest  domain.Digest
 }
 
 func (c config) stdio() stdioServer {
-	return stdioServer{command: c.command, sandbox: c.sandbox}
+	return stdioServer{c.command, c.sandbox, c.digest}
 }
 
 // serveStdio inicia o servidor como subprocesso e repassa as mensagens
@@ -48,20 +50,23 @@ func serveStdio(
 }
 
 
-// newServerCmd cria o processo do servidor: no host, como até o
-// Módulo 17, ou, com -sandbox, um docker run com o perfil da
-// Guarita. O nome do contêiner volta para a remoção no fim.
+// newServerCmd cria o processo do servidor, depois de conferi-lo: no
+// host, como até o Módulo 17, ou, com -sandbox, um docker run com o
+// perfil da Guarita. O nome do contêiner volta para a remoção no fim.
 func newServerCmd(
 	ctx context.Context, target stdioServer,
 ) (*exec.Cmd, string, error) {
+	command, err := target.verified()
+	if err != nil {
+		return nil, "", err
+	}
 	profile, err := target.sandbox.profile()
 	if err != nil {
 		return nil, "", err
 	}
 	if profile != nil {
-		return profile.Command(ctx, target.command)
+		return profile.Command(ctx, command)
 	}
-	command := target.command
 	// G204 avisa sobre comando vindo de fora. Aqui ele vem do operador,
 	// na linha de comando, nunca de uma mensagem do agente.
 	//nolint:gosec // o operador escolhe o servidor
