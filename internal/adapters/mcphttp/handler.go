@@ -252,12 +252,13 @@ func replyStatus(reply []byte) int {
 	return http.StatusOK
 }
 
-// proxyError traduz a falha do repasse. Prazo esgotado é 504; servidor
-// fora do ar é 502; o agente que desistiu não recebe nada.
 // retryAfter é o erro que diz quanto esperar, como o do disjuntor. A
 // interface é deste pacote, e o disjuntor a satisfaz sem importá-lo.
 type retryAfter interface{ RetryAfter() time.Duration }
 
+// proxyError traduz a falha do repasse. Disjuntor aberto é 503, com
+// Retry-After; prazo esgotado é 504; servidor fora do ar é 502; o
+// agente que desistiu não recebe nada.
 func proxyError(w http.ResponseWriter, r *http.Request, err error) {
 	var wait retryAfter
 	switch {

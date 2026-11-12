@@ -1,6 +1,6 @@
 // Package dlp examina os argumentos de uma chamada em busca de dados
 // que não deveriam sair: CPF, chaves de API, chaves privadas, segredos
-// codificados e, desde a seção de destinos, URLs fora da lista.
+// codificados e, com a lista de destinos, URLs fora dela.
 package dlp
 
 import (
