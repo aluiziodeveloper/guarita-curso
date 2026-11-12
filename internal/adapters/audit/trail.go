@@ -17,6 +17,8 @@ import (
 	"sync"
 	"time"
 
+	"go.opentelemetry.io/otel/trace"
+
 	"github.com/aluiziodeveloper/guarita-curso/internal/domain"
 )
 
@@ -60,8 +62,9 @@ func Open(path string, key []byte) (*Trail, error) {
 // só segue depois de a decisão estar registrada. O HMAC dos argumentos
 // é calculado aqui, e os argumentos não vão a lugar nenhum.
 func (t *Trail) Record(
-	_ context.Context, e domain.AuditEntry, arguments json.RawMessage,
+	ctx context.Context, e domain.AuditEntry, arguments json.RawMessage,
 ) error {
+	e.TraceID = traceID(ctx)
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	e.Seq, e.Prev = t.head.Seq+1, t.head.Hash
@@ -113,6 +116,15 @@ func canonical(e domain.AuditEntry, line []byte) bool {
 	}
 	want, _ := json.Marshal(sealed)
 	return bytes.Equal(want, line)
+}
+
+// traceID é o trace do contexto, o mesmo do agente e do span da
+// Guarita, ou vazio sem trace.
+func traceID(ctx context.Context) string {
+	if sc := trace.SpanContextFromContext(ctx); sc.HasTraceID() {
+		return sc.TraceID().String()
+	}
+	return ""
 }
 
 // Close fecha o arquivo.
