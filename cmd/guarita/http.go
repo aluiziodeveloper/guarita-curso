@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"sync/atomic"
 	"time"
 
 	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/identity"
@@ -30,7 +31,7 @@ var errAuthRequired = errors.New(
 const httpShutdownGrace = 5 * time.Second
 
 // serveHTTP confere os padrões, abre as escutas e atende até ctx
-// acabar; aí as chamadas em curso terminam, com prazo.
+// acabar; aí o /readyz vira 503, e as chamadas em curso terminam.
 func serveHTTP(
 	ctx context.Context, c config, d deciders,
 	stderr io.Writer,
@@ -39,7 +40,9 @@ func serveHTTP(
 		return err
 	}
 	logger := newLogger(stderr)
-	store, closeSides, err := openSides(ctx, c, d, logger, stderr)
+	var ready atomic.Bool
+	store, closeSides, err := openSides(ctx, c, d, &ready, logger,
+		stderr)
 	if err != nil {
 		return err
 	}
@@ -53,25 +56,32 @@ func serveHTTP(
 		c.scheme(), listener.Addr(), c.servers[0].path())
 	served := make(chan error, 1)
 	go func() { served <- c.serve(server, listener) }()
-	return shutdown(ctx, server, served)
+	ready.Store(true)
+	return shutdown(ctx, server, served, &ready)
 }
 
-// openSides abre o que fica ao lado da escuta do agente: o catálogo e
-// a página do operador. closeAll fecha na ordem inversa.
+// openSides abre o que fica ao lado da escuta do agente: a operação, o
+// catálogo e a página do operador. closeAll fecha na ordem inversa.
 func openSides(
-	ctx context.Context, c config, d deciders,
+	ctx context.Context, c config, d deciders, ready *atomic.Bool,
 	logger *slog.Logger, stderr io.Writer,
 ) (app.CatalogStore, func(), error) {
+	stopOps, err := startOps(c.ops, d.metrics, ready, stderr)
+	if err != nil {
+		return nil, nil, err
+	}
 	store, closeStore, err := openStore(ctx, c, logger)
 	if err != nil {
+		stopOps()
 		return nil, nil, err
 	}
 	stopAdmin, err := startAdmin(c.approval, d.queue, stderr)
 	if err != nil {
 		closeStore()
+		stopOps()
 		return nil, nil, err
 	}
-	return store, func() { stopAdmin(); closeStore() }, nil
+	return store, func() { stopAdmin(); closeStore(); stopOps() }, nil
 }
 
 // listen prepara o classificador, se houver, abre a escuta do agente
@@ -116,12 +126,14 @@ func newServer(endpoint http.Handler) *http.Server {
 // fluxos abertos; esgotado o prazo, Close os corta.
 func shutdown(
 	ctx context.Context, server *http.Server, served <-chan error,
+	ready *atomic.Bool,
 ) error {
 	select {
 	case err := <-served:
 		return err
 	case <-ctx.Done():
 	}
+	ready.Store(false) // o /readyz passa a 503 antes de parar
 	grace, cancel := context.WithTimeout(context.WithoutCancel(ctx),
 		httpShutdownGrace)
 	defer cancel()
@@ -160,7 +172,7 @@ func newEndpoint(
 		mux.Handle(identity.MetadataPath+server.path(), metadata)
 	}
 	mux.Handle("/mcp/{server}", named)
-	return guard.Wrap(mux), nil
+	return d.measured(guard.Wrap(mux)), nil
 }
 
 // newRoute monta um servidor: o recurso protegido é o caminho dele, e
@@ -248,7 +260,11 @@ func newHandler(
 	if d.tracer != nil {
 		options = append(options, mcphttp.WithTracer(d.tracer))
 	}
-	if rt := c.limits.transport(server.name, logger); rt != nil {
+	rt := c.limits.transport(server.name, logger)
+	if d.metrics != nil {
+		rt = d.metrics.Transport(rt)
+	}
+	if rt != nil {
 		options = append(options, mcphttp.WithTransport(rt))
 	}
 	if server.credential != "" {
@@ -282,7 +298,11 @@ func newHandler(
 	if line.ReadsResults() { // o caminho de volta
 		options = append(options, mcphttp.WithResults(uc))
 	}
-	return mcphttp.NewHandler(upstream, mcpproxy.NewGate(uc), options...)
+	var gate mcphttp.Admitter = mcpproxy.NewGate(uc)
+	if d.metrics != nil {
+		gate = d.metrics.Admitter(gate)
+	}
+	return mcphttp.NewHandler(upstream, gate, options...)
 }
 
 // newGuard aceita os hosts de -host ou, sem eles, os do loopback.

@@ -14,6 +14,7 @@ import (
 	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/admin"
 	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/approval"
 	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/mcphttp"
+	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/metrics"
 	"github.com/aluiziodeveloper/guarita-curso/internal/app"
 	"github.com/aluiziodeveloper/guarita-curso/internal/platform/secret"
 )
@@ -51,6 +52,7 @@ type deciders struct {
 	quota      app.Inspector       // nil sem -quota nem -budget
 	auditor    app.Auditor         // nil sem -audit
 	tracer     trace.Tracer        // nil sem -trace-file
+	metrics    *metrics.Metrics    // nil sem -ops-listen
 }
 
 // newDeciders monta o que vale para todas as rotas e os dois modos: a
@@ -74,7 +76,7 @@ func newDeciders(
 	}
 	return deciders{
 		policy: policy, queue: newQueue(c.approval),
-		auditor: auditor, tracer: tracer,
+		auditor: auditor, tracer: tracer, metrics: c.ops.metrics(),
 	}, func() { _, _ = closeTracer(), closeAudit() }, nil
 }
 
