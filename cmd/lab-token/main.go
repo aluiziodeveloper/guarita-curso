@@ -43,6 +43,12 @@ func run(args []string, stdout io.Writer) error {
 	if err := flags.Parse(args); err != nil {
 		return errors.Join(errUsage, err)
 	}
+	if *genkey || *cert != "" {
+		// O README manda gravar em lab/, que ainda não existe.
+		if err := os.MkdirAll(*out, 0o750); err != nil {
+			return err
+		}
+	}
 	if *genkey {
 		return generate(*out)
 	}
