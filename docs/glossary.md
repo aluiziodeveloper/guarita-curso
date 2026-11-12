@@ -16,11 +16,14 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | *Link following* | Abrir pelo nome sem conferir para onde um *link* aponta (CWE-59) | 18 |
 | *Seccomp* | Filtro das chamadas ao kernel que um processo pode fazer | 18 |
 | *Slowloris* | Ataque que prende conexões enviando o pedido devagar | 08 |
+| *Span* | Um trecho do *trace*, feito por um serviço, com início, fim e pai | 20 |
 | *Spotlighting* | Família de técnicas de marcação de procedência para modelos de linguagem | 15 |
 | *Symlink* | Arquivo cujo conteúdo é um caminho, seguido por quem o abre pelo nome | 18 |
 | *Token passthrough* | Repassar ao destino um token que não foi emitido para ele | 09 |
+| *Trace* | A história de um pedido por todos os serviços que ele atravessa | 20 |
 | `errgroup` | Grupo de goroutines com erro e cancelamento compartilhados | 06 |
 | `fmt.Stringer` | Interface com `String() string`, usada pela formatação | 04 |
+| `fsync` | Chamada que espera os dados chegarem ao disco | 20 |
 | `internal` | Pasta cujos pacotes só podem ser importados dentro do mesmo prefixo de caminho | 01 |
 | `iota` | Contador de linhas de um bloco `const`, começando em 0 | 04 |
 | `opa test` | O executor de testes escritos em Rego | 12 |
@@ -28,6 +31,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | `select` | Espera o primeiro de vários canais | 06 |
 | `slog.LogValuer` | Interface com que um valor diz como quer ser registrado | 09 |
 | `sync.Mutex` | Trava de exclusão mútua: uma goroutine por vez entre `Lock` e `Unlock` | 07 |
+| `traceparent` | O cabeçalho do W3C Trace Context que leva o *trace* e o *span* pai | 20 |
 | `user_version` | Inteiro no cabeçalho do SQLite, livre para a aplicação | 10 |
 | Adaptador | Peça de tecnologia que encaixa numa porta | 05 |
 | ADR | Registro de decisão de arquitetura: uma decisão, com o contexto e as consequências | 01 |
@@ -42,8 +46,10 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Benchmark | Medida repetida do custo de um trecho de código, com `testing.B` | 17 |
 | Bolha | O grupo de goroutines de `synctest.Test`, com relógio falso | 13 |
 | Build em múltiplos estágios | Dockerfile que compila num estágio e copia só o resultado para outro | 01 |
+| Cabeça | O hash da última entrada, guardado à parte como âncora | 20 |
 | Cabeçalho de salto a salto | Cabeçalho que vale só entre dois nós, como `Connection` | 08 |
 | Cabeçalho espelhado | Cópia, num cabeçalho HTTP, de um campo do corpo | 09 |
+| Cadeia de hashes (*hash chaining*) | Entradas em que cada uma guarda o hash da anterior | 20 |
 | Camada anticorrupção | Camada que traduz entre o protocolo externo e o domínio | 07 |
 | Camada exigida | Etapa que toda rota precisa ter, conferida na partida | 17 |
 | Caminho de volta | O resultado de uma chamada, do servidor até o agente | 15 |
@@ -54,6 +60,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Categoria geral | Classificação Unicode de cada ponto de código, como `Cf` ou `Mn` | 11 |
 | Chamada de ferramentas | Ciclo em que o modelo pede uma ferramenta e recebe o resultado como mensagem | 01 |
 | Chave duplicada | Mesmo nome duas vezes num objeto JSON, com leitura imprevisível | 07 |
+| Checkpoint | A cabeça da trilha assinada, no desafio do Módulo 20 | 20 |
 | CI | Integração contínua: compilação e testes automáticos a cada push, no GitHub Actions | 01 |
 | Classificador estatístico | Inspetor que dá uma probabilidade, e cujos erros só se descrevem por uma medida | 16 |
 | Comparação em tempo constante | Comparação cujo tempo não depende de onde os valores diferem | 13 |
@@ -95,6 +102,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Espião (*spy*) | Dublê de teste que registra as chamadas que recebe, para o teste conferi-las | 05 |
 | Estado terminal | Estado sem saída: o pedido já foi decidido | 13 |
 | Etapa | Um inspetor da ida, um da volta ou o marcador, com um nome no registro | 17 |
+| Evidência de adulteração | Propriedade de um registro em que qualquer mudança aparece na verificação | 20 |
 | Exemplo testável | Função `Example` cuja saída o `go test` confere | 03 |
 | Exfiltração | Levar para fora, pelos argumentos de uma chamada, um dado que não deveria sair | 14 |
 | Fadiga de aprovação (*approval fatigue*) | O operador aprova por cansaço, depois de pedidos repetidos | 13 |
@@ -110,6 +118,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Fuzzing | Teste que gera entradas guiado pela cobertura de código | 07 |
 | GCRA | Algoritmo que guarda o balde como um instante teórico, o `tat` | 19 |
 | Goroutine | Função executando de forma independente, gerida pelo runtime de Go | 06 |
+| HMAC | Hash com chave secreta, da RFC 2104 | 20 |
 | Impressão digital | SHA-256 da forma canônica da definição | 10 |
 | Indefinido | O estado de uma regra cujo corpo não vale | 12 |
 | Inferência de tipos | O compilador deduzir o parâmetro de tipo pelos argumentos | 17 |
@@ -117,6 +126,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Inspetor | Etapa que examina o conteúdo de uma chamada depois da política | 14 |
 | Inversão de dependência | O núcleo declara a interface; a infraestrutura a satisfaz | 05 |
 | Janela fixa | Contagem por período do relógio, zerada na virada | 19 |
+| JSON Lines | Um valor JSON por linha de um arquivo | 20 |
 | JSON-RPC | Formato de chamada remota em JSON usado por todas as mensagens MCP | 01 |
 | JWT | Token com afirmações assinadas, em três partes | 09 |
 | Limiar | Pontuação a partir da qual o resultado é barrado | 16 |
@@ -142,6 +152,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Negação por padrão | Tudo é negado, salvo o que for concedido | 12 |
 | Normalização | Escolher uma escrita só para textos equivalentes (NFC, NFKC) | 11 |
 | Notificação | Mensagem com `method` e sem `id`, que não recebe resposta | 07 |
+| Não repúdio (*non-repudiation*) | Impossibilidade de negar, depois, o que foi feito e registrado | 20 |
 | Opção funcional | Função que ajusta um valor em construção | 05 |
 | Origem | Esquema, nome e porta de uma página | 08 |
 | Orçamento de custo | Unidades por agente, de onde cada chamada tira o custo estimado | 19 |
@@ -200,6 +211,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Tipo definido | Tipo novo, com identidade própria, declarado a partir de um tipo subjacente | 03 |
 | TOCTOU | A janela entre conferir algo e usá-lo, em que ele pode mudar | 18 |
 | Toolchain | Compilador e ferramentas acessados pelo comando `go` | 01 |
+| Trilha de auditoria | Registro das decisões feito para ser conferido por quem não confia nele | 20 |
 | Troca silenciosa (*rug pull*) | O servidor muda a definição de uma ferramenta depois de aprovada | 10 |
 | Validar em vez de normalizar | Aceitar ou recusar os dados como vieram, sem consertá-los | 11 |
 | Validação na fronteira | Conferência dos dados antes de entregá-los ao próximo componente | 03 |
