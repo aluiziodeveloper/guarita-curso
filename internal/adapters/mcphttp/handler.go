@@ -67,6 +67,7 @@ type Handler struct {
 	credential  secret.Secret
 	logger      *slog.Logger
 	agent       func(context.Context) string
+	catalog     ToolReviewer
 }
 
 // Option ajusta um Handler: é uma opção funcional.
@@ -121,6 +122,7 @@ func NewHandler(
 	}
 	handler.proxy = &httputil.ReverseProxy{
 		Rewrite: handler.rewrite, ErrorHandler: proxyError,
+		ModifyResponse: handler.modifyResponse,
 		ErrorLog: slog.NewLogLogger(handler.logger.Handler(),
 			slog.LevelWarn),
 	}
@@ -181,6 +183,9 @@ func (h *Handler) post(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx, cancel := h.callContext(r.Context(), message.Method)
 	defer cancel()
+	if message.Method == "tools/list" {
+		ctx = context.WithValue(ctx, listToolsKey{}, true)
+	}
 	out := r.Clone(ctx) // o pedido recebido não é alterado
 	out.Body = io.NopCloser(bytes.NewReader(body))
 	out.ContentLength = int64(len(body))
@@ -248,6 +253,10 @@ func proxyError(w http.ResponseWriter, r *http.Request, err error) {
 	case errors.Is(err, context.DeadlineExceeded):
 		writeError(w, http.StatusGatewayTimeout, codeInternalError,
 			"upstream timeout")
+	case errors.Is(err, errUpstreamResponse),
+		errors.Is(err, errCatalog):
+		writeError(w, http.StatusBadGateway, codeInternalError,
+			err.Error())
 	default:
 		writeError(w, http.StatusBadGateway, codeInternalError,
 			"upstream unavailable")
