@@ -10,10 +10,11 @@ import (
 	"github.com/aluiziodeveloper/guarita-curso/internal/domain"
 )
 
-// PolicyEvaluator decide o que fazer com uma chamada já validada.
+// PolicyEvaluator decide o que fazer com uma chamada já validada, a
+// partir de quem pede, em que servidor e o quê.
 type PolicyEvaluator interface {
 	Evaluate(
-		ctx context.Context, call domain.Call,
+		ctx context.Context, input domain.PolicyInput,
 	) (domain.Decision, error)
 }
 
@@ -51,6 +52,19 @@ func WithCatalog(catalog ToolCatalog) Option {
 }
 
 
+// WithServer diz à política em que servidor a chamada vai rodar: o
+// namespace da rota, conhecido quando a Guarita é montada.
+func WithServer(server string) Option {
+	return func(uc *InterceptCall) { uc.server = server }
+}
+
+// WithAgent diz como saber quem é o agente de um pedido. O caso de uso
+// não conhece tokens: recebe uma função do contexto para o nome.
+func WithAgent(agent func(context.Context) string) Option {
+	return func(uc *InterceptCall) { uc.agent = agent }
+}
+
+
 var _ ToolCatalog = (*PinCatalog)(nil)
 
 // checkCatalog consulta o catálogo, se houver um.
@@ -68,6 +82,8 @@ type InterceptCall struct {
 	policy   PolicyEvaluator
 	upstream Upstream
 	catalog  ToolCatalog
+	server   string
+	agent    func(context.Context) string
 }
 
 // NewInterceptCall recebe as portas de que o caso de uso precisa. As
@@ -75,7 +91,10 @@ type InterceptCall struct {
 func NewInterceptCall(
 	policy PolicyEvaluator, upstream Upstream, options ...Option,
 ) *InterceptCall {
-	uc := &InterceptCall{policy: policy, upstream: upstream}
+	uc := &InterceptCall{
+		policy: policy, upstream: upstream,
+		agent: func(context.Context) string { return "" },
+	}
 	for _, option := range options {
 		option(uc)
 	}
@@ -105,10 +124,7 @@ func (uc *InterceptCall) Authorize(
 	if err := uc.checkCatalog(ctx, call); err != nil {
 		return fmt.Errorf("intercept call: %w", err)
 	}
-	decision, err := uc.policy.Evaluate(ctx, call)
-	if err == nil {
-		err = decision.Validate()
-	}
+	decision, err := uc.evaluate(ctx, call)
 	if err != nil {
 		return fmt.Errorf("intercept call: %w: %w",
 			ErrPolicyFailed, err)
@@ -124,6 +140,19 @@ func (uc *InterceptCall) Authorize(
 	return ErrPolicyFailed
 }
 
+
+// evaluate monta a entrada da política e confere a decisão que volta.
+func (uc *InterceptCall) evaluate(
+	ctx context.Context, call domain.Call,
+) (domain.Decision, error) {
+	decision, err := uc.policy.Evaluate(ctx, domain.PolicyInput{
+		Agent: uc.agent(ctx), Server: uc.server, Call: call,
+	})
+	if err == nil {
+		err = decision.Validate()
+	}
+	return decision, err
+}
 
 func (uc *InterceptCall) forward(
 	ctx context.Context, call domain.Call,
