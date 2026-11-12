@@ -10,6 +10,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 |---|---|---|
 | *Capability* | Um pedaço dos poderes do root, que o processo pode ter ou não | 18 |
 | *Cgroup* | Limite de recursos, como memória e processos, para um grupo de processos | 18 |
+| *Compare-and-swap* | Troca atômica que só grava se o valor não mudou desde a leitura | 19 |
 | *Confused deputy* | Componente com privilégio que age em nome de quem não o tem | 04 |
 | *Fixture* | Entrada de teste gravada em arquivo, com o resultado esperado | 15 |
 | *Link following* | Abrir pelo nome sem conferir para onde um *link* aponta (CWE-59) | 18 |
@@ -37,6 +38,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Arquivo *golden* | Arquivo com a saída esperada de um teste, regravado de propósito | 07 |
 | Ativo | O que a Guarita precisa proteger | 04 |
 | Audiência (`aud`) | Recurso para o qual o token foi emitido | 09 |
+| Balde de fichas (*token bucket*) | Limite com rajada e reposição a taxa constante | 19 |
 | Benchmark | Medida repetida do custo de um trecho de código, com `testing.B` | 17 |
 | Bolha | O grupo de goroutines de `synctest.Test`, com relógio falso | 13 |
 | Build em múltiplos estágios | Dockerfile que compila num estágio e copia só o resultado para outro | 01 |
@@ -70,9 +72,12 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Corpus de ataques | Conjunto de entradas em arquivos, cada uma com o resultado esperado | 11 |
 | Corpus de sementes | Entradas iniciais do fuzzing, de `f.Add` e de `testdata/fuzz` | 07 |
 | Corrida de dados | Acesso concorrente sem ordem a um valor, com ao menos uma escrita | 06 |
+| Cota | Limite de chamadas ou de custo por agente e ferramenta | 19 |
 | CSRF | Pedido disparado por outra página, com a credencial que o navegador manda sozinho | 08 |
+| Decorador | Componente com o mesmo contrato do que ele envolve, e um comportamento a mais | 19 |
 | Defesa em profundidade (*defense in depth*) | Camadas no caminho do ataque, de modo que o que uma não pega outra pegue | 17 |
 | Delimitador aleatório | Delimitador com identificador sorteado a cada resposta | 15 |
+| Disjuntor (*circuit breaker*) | Componente que para de chamar um serviço que está falhando | 19 |
 | DLP | Prevenção contra vazamento de dados: regras que acham dados sensíveis no que sai | 14 |
 | DNS rebinding | Troca do endereço por trás de um nome para alcançar um serviço local na mesma origem | 08 |
 | Dono de goroutine | Código que a inicia, a faz parar e espera o fim dela | 06 |
@@ -103,6 +108,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Fronteira de confiança (*trust boundary*) | Ponto em que dados de uma parte passam a influenciar decisões de outra | 01 |
 | Fuga de sandbox (*sandbox escape*) | Um servidor isolado alcança o que está fora do isolamento, como os arquivos do host | 18 |
 | Fuzzing | Teste que gera entradas guiado pela cobertura de código | 07 |
+| GCRA | Algoritmo que guarda o balde como um instante teórico, o `tat` | 19 |
 | Goroutine | Função executando de forma independente, gerida pelo runtime de Go | 06 |
 | Impressão digital | SHA-256 da forma canônica da definição | 10 |
 | Indefinido | O estado de uma regra cujo corpo não vale | 12 |
@@ -110,6 +116,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Injeção indireta (*indirect prompt injection*) | Instrução para o modelo que chega no conteúdo que uma ferramenta devolve | 15 |
 | Inspetor | Etapa que examina o conteúdo de uma chamada depois da política | 14 |
 | Inversão de dependência | O núcleo declara a interface; a infraestrutura a satisfaz | 05 |
+| Janela fixa | Contagem por período do relógio, zerada na virada | 19 |
 | JSON-RPC | Formato de chamada remota em JSON usado por todas as mensagens MCP | 01 |
 | JWT | Token com afirmações assinadas, em três partes | 09 |
 | Limiar | Pontuação a partir da qual o resultado é barrado | 16 |
@@ -121,6 +128,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Marcador sintético | Texto fixo do laboratório, sem correspondência com um segredo real | 01 |
 | Marcação de procedência | Delimitar o conteúdo não confiável e dizer de onde ele veio | 15 |
 | Matriz de confusão | Contagem de verdadeiros e falsos positivos e negativos num limiar | 16 |
+| Meio-aberto | Estado do disjuntor em que uma única chamada de teste passa | 19 |
 | Menor privilégio (*least privilege*) | Cada agente opera com o mínimo necessário para a tarefa | 12 |
 | Middleware | `http.Handler` que embrulha outro, como um decorador | 08 |
 | Migração | Passo numerado de mudança no esquema do banco | 10 |
@@ -130,11 +138,13 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Módulo | Unidade Go que declara caminho, versão mínima e dependências | 01 |
 | Namespace (de servidor) | Nome que o operador dá a um servidor, e o caminho dele na Guarita | 11 |
 | Namespace (do Linux) | Visão própria de processos, rede ou sistema de arquivos para um processo | 18 |
+| Negação de carteira | Abuso do preço por uso de um serviço com volume alto | 19 |
 | Negação por padrão | Tudo é negado, salvo o que for concedido | 12 |
 | Normalização | Escolher uma escrita só para textos equivalentes (NFC, NFKC) | 11 |
 | Notificação | Mensagem com `method` e sem `id`, que não recebe resposta | 07 |
 | Opção funcional | Função que ajusta um valor em construção | 05 |
 | Origem | Esquema, nome e porta de uma página | 08 |
+| Orçamento de custo | Unidades por agente, de onde cada chamada tira o custo estimado | 19 |
 | Orçamento de falsos positivos | A FPR máxima aceita, fixada antes da medida | 16 |
 | Pacote de teste externo | Pacote `x_test` que só enxerga a API exportada de `x` | 03 |
 | Parser estrito | Parser que recusa a mensagem inteira diante de qualquer ambiguidade | 07 |
@@ -157,6 +167,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Proxy reverso | Servidor que recebe pedidos em nome de outro e os repassa | 08 |
 | Quórum | Número de operadores diferentes exigido para aprovar | 13 |
 | Raiz de composição | O ponto, em `cmd/guarita`, que escolhe e monta os adaptadores | 05 |
+| Rajada | Quantas fichas o balde tem cheio | 19 |
 | RE2 | Sintaxe de expressões regulares com tempo de execução linear | 14 |
 | Receptor | Parâmetro que associa um método a um tipo, por valor ou por ponteiro | 03 |
 | Refatoração | Mudança de estrutura que mantém o comportamento, com os testes como prova | 15 |
@@ -164,6 +175,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Rego | A linguagem declarativa de políticas do OPA | 12 |
 | Regra completa | Regra que define um único valor para um nome | 12 |
 | Regra de dependência | Dependências de código apontam para o núcleo | 05 |
+| Relógio monotônico | Relógio que só anda para a frente, imune aos acertos do sistema | 19 |
 | Repositório | Porta que esconde onde e como os dados ficam | 10 |
 | Restrição | Interface que diz o que o parâmetro de tipo precisa ter, como `any` ou `comparable` | 17 |
 | Restrição de compilação | Linha `//go:build` que decide se um arquivo entra no pacote | 06 |
