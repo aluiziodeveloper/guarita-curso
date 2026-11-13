@@ -9,19 +9,25 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Termo | Significado | Módulo |
 |---|---|---|
 | *Confused deputy* | Componente com privilégio que age em nome de quem não o tem | 04 |
+| `errgroup` | Grupo de goroutines com erro e cancelamento compartilhados | 06 |
 | `fmt.Stringer` | Interface com `String() string`, usada pela formatação | 04 |
 | `internal` | Pasta cujos pacotes só podem ser importados dentro do mesmo prefixo de caminho | 01 |
 | `iota` | Contador de linhas de um bloco `const`, começando em 0 | 04 |
+| `select` | Espera o primeiro de vários canais | 06 |
 | Adaptador | Peça de tecnologia que encaixa numa porta | 05 |
 | ADR | Registro de decisão de arquitetura: uma decisão, com o contexto e as consequências | 01 |
 | Agente | Aplicação que coordena o modelo e as conexões com servidores MCP | 01 |
 | Arquitetura hexagonal (*hexagonal architecture*) | Núcleo isolado da infraestrutura, conversando por portas | 05 |
 | Ativo | O que a Guarita precisa proteger | 04 |
 | Build em múltiplos estágios | Dockerfile que compila num estágio e copia só o resultado para outro | 01 |
+| Canal | Cano tipado entre goroutines, que também sincroniza | 06 |
 | Caso de uso | Operação da aplicação, como `InterceptCall` | 05 |
 | Chamada de ferramentas | Ciclo em que o modelo pede uma ferramenta e recebe o resultado como mensagem | 01 |
 | CI | Integração contínua: compilação e testes automáticos a cada push, no GitHub Actions | 01 |
 | Conjunto de métodos | Métodos que pertencem a `T` ou a `*T`; decide a satisfação de interfaces | 03 |
+| Contrapressão | Espera que volta até quem envia quando o destino não acompanha | 06 |
+| Corrida de dados | Acesso concorrente sem ordem a um valor, com ao menos uma escrita | 06 |
+| Dono de goroutine | Código que a inicia, a faz parar e espera o fim dela | 06 |
 | Dublê de teste (*test double*) | Substituto de uma dependência durante o teste | 05 |
 | Embrulhar um erro | Criar um erro novo que guarda o anterior, com `%w` | 03 |
 | Enumeração completa | Teste que percorre todos os valores de um tipo enumerado | 04 |
@@ -33,6 +39,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Fechamento | Função que captura variáveis do escopo em que foi criada | 01 |
 | Ferramenta | Capacidade anunciada por um servidor MCP, com nome, descrição e esquema | 01 |
 | Fronteira de confiança (*trust boundary*) | Ponto em que dados de uma parte passam a influenciar decisões de outra | 01 |
+| Goroutine | Função executando de forma independente, gerida pelo runtime de Go | 06 |
 | Inversão de dependência | O núcleo declara a interface; a infraestrutura a satisfaz | 05 |
 | JSON-RPC | Formato de chamada remota em JSON usado por todas as mensagens MCP | 01 |
 | Lista de permissão | Regra que só aceita o que foi declarado; o resto fica de fora até ser ligado | 05 |
@@ -48,6 +55,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Raiz de composição | O ponto, em `cmd/guarita`, que escolhe e monta os adaptadores | 05 |
 | Receptor | Parâmetro que associa um método a um tipo, por valor ou por ponteiro | 03 |
 | Regra de dependência | Dependências de código apontam para o núcleo | 05 |
+| Restrição de compilação | Linha `//go:build` que decide se um arquivo entra no pacote | 06 |
 | STRIDE | Seis categorias de ameaça, cada uma ligada a uma propriedade de segurança | 04 |
 | Teste de consistência | Teste que compara um documento de projeto com os dados do código | 04 |
 | Teste orientado a tabelas (*table-driven tests*) | Casos nomeados numa fatia, executados pelo mesmo laço com subtestes | 03 |
@@ -55,6 +63,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Toolchain | Compilador e ferramentas acessados pelo comando `go` | 01 |
 | Validação na fronteira | Conferência dos dados antes de entregá-los ao próximo componente | 03 |
 | Valor zero | Valor que Go atribui a uma variável sem inicialização explícita | 03 |
+| Vazamento de goroutine (*goroutine leak*) | Goroutine que nunca termina e acumula recursos | 06 |
 | Zona de confiança | Parte do sistema que opera sob um mesmo nível de confiança | 04 |
 | Árvore de ataque (*attack tree*) | Objetivo do atacante na raiz, caminhos em ramos E e OU | 04 |
 

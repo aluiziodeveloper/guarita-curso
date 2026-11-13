@@ -1,6 +1,6 @@
 # Guarita
 
-Guarita é o projeto de um proxy de segurança para agentes que usam o Model Context Protocol (MCP). Este repositório está sendo construído módulo a módulo; neste estágio, o executável `cmd/guarita` é apenas uma fundação e ainda não encaminha tráfego nem aplica políticas.
+Guarita é o projeto de um proxy de segurança para agentes que usam o Model Context Protocol (MCP). Este repositório é construído aula a aula no curso *Firewall de Agentes de IA em Go*; cada aula prática termina numa tag `aula-MM-NN`.
 
 ## Laboratório do Módulo 2
 
@@ -128,6 +128,17 @@ docker compose -f deploy/compose.yaml run --build --rm \
 
 O controle compara nomes e descrições com uma referência local; não autentica o servidor, não verifica sua implementação e não prova que uma ferramenta com descrição legítima se comporte como anunciado. Sem a opção, o laboratório mantém o comportamento anterior.
 
+## Proxy stdio
+
+A partir do Módulo 6, a Guarita fica entre o agente e um servidor MCP que fala pelo transporte stdio. Configure o agente para executar a Guarita no lugar do servidor, com o comando do servidor depois de `--`:
+
+```bash
+go build -o guarita ./cmd/guarita
+./guarita -- <comando do servidor MCP> [argumentos]
+```
+
+A Guarita inicia o servidor como subprocesso, repassa as mensagens nos dois sentidos e termina quando o servidor fecha a saída ou quando recebe SIGINT ou SIGTERM. Neste módulo, o repasse ainda é transparente; a interpretação das mensagens e as decisões de política entram no Módulo 7.
+
 ## Arquitetura e regra de imports
 
 A Guarita segue a arquitetura hexagonal decidida nos ADRs [0001](docs/adr/0001-proxy-mcp.md) e [0003](docs/adr/0003-portas-e-adaptadores.md):
@@ -136,8 +147,8 @@ A Guarita segue a arquitetura hexagonal decidida nos ADRs [0001](docs/adr/0001-p
 |---|---|---|
 | `internal/domain` | `Call`, `Tool`, `Decision`, `Result` e suas validações | Só a biblioteca padrão, sem `net` nem `os` |
 | `internal/app` | Caso de uso `InterceptCall` e as portas `PolicyEvaluator` e `Upstream` | Biblioteca padrão e `internal/domain` |
-| `internal/adapters/...` | Implementações das portas, como `policystatic` | `internal/app`, `internal/domain` e o que a tecnologia exigir |
-| `cmd/guarita` | Raiz de composição a partir do Módulo 6: escolherá os adaptadores e montará os casos de uso | Tudo |
+| `internal/adapters/...` | Implementações das portas e adaptadores de entrada, como `policystatic` e `mcpproxy` | `internal/app`, `internal/domain` e o que a tecnologia exigir |
+| `cmd/guarita` | Raiz de composição: inicia o servidor e monta o repasse | Tudo |
 
 As duas primeiras linhas são verificadas pelo `depguard` no `golangci-lint`; um import fora da lista quebra a CI.
 
