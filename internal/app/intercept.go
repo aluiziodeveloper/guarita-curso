@@ -76,12 +76,14 @@ func (uc *InterceptCall) checkCatalog(
 
 // InterceptCall é o caso de uso que fica entre o agente e o servidor.
 type InterceptCall struct {
-	policy   PolicyEvaluator
-	upstream Upstream
-	catalog  ToolCatalog
-	server   string
-	agent    func(context.Context) string
-	approver Approver
+	policy     PolicyEvaluator
+	upstream   Upstream
+	catalog    ToolCatalog
+	server     string
+	agent      func(context.Context) string
+	approver   Approver
+	inspectors []Inspector
+	findings   FindingsObserver
 }
 
 // NewInterceptCall recebe as portas de que o caso de uso precisa. As
@@ -91,7 +93,8 @@ func NewInterceptCall(
 ) *InterceptCall {
 	uc := &InterceptCall{
 		policy: policy, upstream: upstream,
-		agent: func(context.Context) string { return "" },
+		agent:    func(context.Context) string { return "" },
+		findings: func(domain.PolicyInput, domain.Inspection) {},
 	}
 	for _, option := range options {
 		option(uc)
@@ -109,8 +112,7 @@ func (uc *InterceptCall) Run(
 	return uc.forward(ctx, call)
 }
 
-// Authorize valida a chamada e pergunta à política, sem repassar nada.
-// Devolve nil só para DecisionAllow; qualquer outro caso nega.
+// Authorize decide a chamada sem repassá-la: nil só para allow.
 func (uc *InterceptCall) Authorize(
 	ctx context.Context, call domain.Call,
 ) error {
@@ -124,6 +126,10 @@ func (uc *InterceptCall) Authorize(
 	if err != nil {
 		return fmt.Errorf("intercept call: %w: %w",
 			ErrPolicyFailed, err)
+	}
+	decision, err = uc.inspect(ctx, call, decision)
+	if err != nil {
+		return fmt.Errorf("intercept call: %w", err)
 	}
 	switch decision {
 	case domain.DecisionAllow:
