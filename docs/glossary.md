@@ -37,19 +37,23 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | ADR | Registro de decisão de arquitetura: uma decisão, com o contexto e as consequências | 01 |
 | Agente | Aplicação que coordena o modelo e as conexões com servidores MCP | 01 |
 | Agência excessiva | O agente tem ferramentas, permissões ou autonomia além do que a tarefa exige | 12 |
+| Alcançável | Que o código chega a chamar, por alguma sequência de chamadas | 21 |
 | Aprovação forjada | Uma aprovação registrada sem a decisão de um operador | 13 |
 | Arquitetura hexagonal (*hexagonal architecture*) | Núcleo isolado da infraestrutura, conversando por portas | 05 |
 | Arquivo *golden* | Arquivo com a saída esperada de um teste, regravado de propósito | 07 |
 | Ativo | O que a Guarita precisa proteger | 04 |
 | Audiência (`aud`) | Recurso para o qual o token foi emitido | 09 |
 | Balde de fichas (*token bucket*) | Limite com rajada e reposição a taxa constante | 19 |
+| Banco de somas | Log público do Go com um hash por versão de módulo | 21 |
 | Benchmark | Medida repetida do custo de um trecho de código, com `testing.B` | 17 |
 | Bolha | O grupo de goroutines de `synctest.Test`, com relógio falso | 13 |
 | Build em múltiplos estágios | Dockerfile que compila num estágio e copia só o resultado para outro | 01 |
+| Build reproduzível | Build em que o mesmo commit dá os mesmos bytes em qualquer máquina | 21 |
 | Cabeça | O hash da última entrada, guardado à parte como âncora | 20 |
 | Cabeçalho de salto a salto | Cabeçalho que vale só entre dois nós, como `Connection` | 08 |
 | Cabeçalho espelhado | Cópia, num cabeçalho HTTP, de um campo do corpo | 09 |
 | Cadeia de hashes (*hash chaining*) | Entradas em que cada uma guarda o hash da anterior | 20 |
+| Cadeia de suprimentos (*supply chain*) | Tudo o que entra num programa antes de ele rodar | 21 |
 | Camada anticorrupção | Camada que traduz entre o protocolo externo e o domínio | 07 |
 | Camada exigida | Etapa que toda rota precisa ter, conferida na partida | 17 |
 | Caminho de volta | O resultado de uma chamada, do servidor até o agente | 15 |
@@ -84,6 +88,8 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Decorador | Componente com o mesmo contrato do que ele envolve, e um comportamento a mais | 19 |
 | Defesa em profundidade (*defense in depth*) | Camadas no caminho do ataque, de modo que o que uma não pega outra pegue | 17 |
 | Delimitador aleatório | Delimitador com identificador sorteado a cada resposta | 15 |
+| Digest | O SHA-256 de um artefato, como `sha256:…` | 21 |
+| Diretiva `toolchain` | Linha do `go.mod` que diz qual toolchain o módulo usa | 21 |
 | Disjuntor (*circuit breaker*) | Componente que para de chamar um serviço que está falhando | 19 |
 | DLP | Prevenção contra vazamento de dados: regras que acham dados sensíveis no que sai | 14 |
 | DNS rebinding | Troca do endereço por trás de um nome para alcançar um serviço local na mesma origem | 08 |
@@ -110,6 +116,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Falso positivo | Valor legítimo acusado por um detector | 14 |
 | Fechamento | Função que captura variáveis do escopo em que foi criada | 01 |
 | Ferramenta | Capacidade anunciada por um servidor MCP, com nome, descrição e esquema | 01 |
+| Fixar por hash | Referir uma dependência pelo conteúdo, e não por um nome que pode ser movido | 21 |
 | Fluxo de eventos (SSE) | Resposta `text/event-stream`, com eventos enviados um a um | 08 |
 | Forma canônica | Uma única maneira de escrever um valor, para que o hash seja sempre o mesmo | 10 |
 | FPR | Fração dos legítimos que foram barrados | 16 |
@@ -122,6 +129,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Impressão digital | SHA-256 da forma canônica da definição | 10 |
 | Indefinido | O estado de uma regra cujo corpo não vale | 12 |
 | Inferência de tipos | O compilador deduzir o parâmetro de tipo pelos argumentos | 17 |
+| Informação de build | O que o `go build` grava no binário: módulos, opções e commit | 21 |
 | Injeção indireta (*indirect prompt injection*) | Instrução para o modelo que chega no conteúdo que uma ferramenta devolve | 15 |
 | Inspetor | Etapa que examina o conteúdo de uma chamada depois da política | 14 |
 | Inversão de dependência | O núcleo declara a interface; a infraestrutura a satisfaz | 05 |
@@ -133,6 +141,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Linha de inspetores | As etapas de uma rota, na ordem em que o caso de uso as consulta | 17 |
 | Lista de destinos | Os hosts para onde uma URL nos argumentos pode apontar | 14 |
 | Lista de permissão | Regra que só aceita o que foi declarado; o resto fica de fora até ser ligado | 05 |
+| Log de transparência | Registro público só de acréscimo, em que qualquer um confere o que foi registrado | 21 |
 | Log-probabilidade | Logaritmo natural da probabilidade de um token numa posição | 16 |
 | Lote | Array de mensagens JSON-RPC, removido do MCP | 07 |
 | Marcador sintético | Texto fixo do laboratório, sem correspondência com um segredo real | 01 |
@@ -176,6 +185,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Precisão | Fração dos barrados que eram ataque | 16 |
 | Princípio aberto/fechado | Aberto para extensão, fechado para modificação | 17 |
 | Proxy reverso | Servidor que recebe pedidos em nome de outro e os repassa | 08 |
+| Pseudoversão | Versão de módulo derivada de um commit, sem *tag* de versão | 21 |
 | Quórum | Número de operadores diferentes exigido para aprovar | 13 |
 | Raiz de composição | O ponto, em `cmd/guarita`, que escolhe e monta os adaptadores | 05 |
 | Rajada | Quantas fichas o balde tem cheio | 19 |
@@ -193,6 +203,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Resumo do modelo | O SHA-256 que identifica o arquivo do modelo, ao contrário do nome | 16 |
 | Revocação | Fração dos ataques que foram barrados | 16 |
 | Runa | Valor de um ponto de código Unicode em Go, um `int32` | 11 |
+| SBOM | Lista de materiais de software: os componentes de um artefato, com as versões | 21 |
 | Semente fixa | Valor inicial do gerador que torna os casos reprodutíveis | 14 |
 | Servidor de autorização | Quem autentica o usuário e emite tokens | 09 |
 | Servidor de recursos | Quem recebe tokens e decide o que eles permitem; a Guarita, para o agente | 09 |
@@ -201,6 +212,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Sinal fraco | Sinal comum também em resultados legítimos; só é registrado | 15 |
 | Sombreamento de ferramenta (*tool shadowing*) | Um servidor anuncia uma ferramenta com o nome que outro já usa | 11 |
 | Sonda | Programa que mede, de dentro, o que um ambiente deixa fazer | 18 |
+| SPDX | Formato de SBOM, norma ISO/IEC 5962 | 21 |
 | STRIDE | Seis categorias de ameaça, cada uma ligada a uma propriedade de segurança | 04 |
 | Suíte de ataques | Testes que rodam cada ataque sem e com a defesa | 10 |
 | Teste de camada ausente | Ablação: tirar uma camada de cada vez e ver o que passa | 17 |
@@ -231,6 +243,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | CI | Integração contínua (*continuous integration*) | 01 |
 | CPF | Cadastro de Pessoas Físicas | 04 |
 | CSRF | Falsificação de pedido entre sites (*cross-site request forgery*) | 08 |
+| CVE | Identificador público de uma vulnerabilidade (*Common Vulnerabilities and Exposures*) | 21 |
 | CWE | Catálogo de fraquezas do MITRE (*Common Weakness Enumeration*) | 18 |
 | DLP | Prevenção contra vazamento de dados (*data loss prevention*) | 14 |
 | HMAC | Resumo com chave, que só quem tem a chave calcula (*hash-based message authentication code*) | 09 |
@@ -241,7 +254,9 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | OWASP | *Open Worldwide Application Security Project* | 01 |
 | PDP | Ponto de decisão da política (*policy decision point*) | 12 |
 | PEP | Ponto de aplicação da política (*policy enforcement point*) | 12 |
+| SBOM | Lista de materiais de software (*software bill of materials*) | 21 |
 | SDK | Kit de desenvolvimento de software | 01 |
+| SLSA | Níveis de proveniência para builds (*Supply-chain Levels for Software Artifacts*) | 21 |
 | SSE | Fluxo de eventos enviados pelo servidor (*Server-Sent Events*) | 08 |
 | SSRF | Falsificação de pedido pelo servidor (*server-side request forgery*) | 08 |
 | STRIDE | As seis categorias de ameaça: falsificação de identidade, adulteração, repúdio, divulgação de informação, negação de serviço e elevação de privilégio | 04 |
