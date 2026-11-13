@@ -128,6 +128,19 @@ docker compose -f deploy/compose.yaml run --build --rm \
 
 O controle compara nomes e descrições com uma referência local; não autentica o servidor, não verifica sua implementação e não prova que uma ferramenta com descrição legítima se comporte como anunciado. Sem a opção, o laboratório mantém o comportamento anterior.
 
+## Arquitetura e regra de imports
+
+A Guarita segue a arquitetura hexagonal decidida nos ADRs [0001](docs/adr/0001-proxy-mcp.md) e [0003](docs/adr/0003-portas-e-adaptadores.md):
+
+| Pacote | Papel | Pode importar |
+|---|---|---|
+| `internal/domain` | `Call`, `Tool`, `Decision`, `Result` e suas validações | Só a biblioteca padrão, sem `net` nem `os` |
+| `internal/app` | Caso de uso `InterceptCall` e as portas `PolicyEvaluator` e `Upstream` | Biblioteca padrão e `internal/domain` |
+| `internal/adapters/...` | Implementações das portas, como `policystatic` | `internal/app`, `internal/domain` e o que a tecnologia exigir |
+| `cmd/guarita` | Raiz de composição a partir do Módulo 6: escolherá os adaptadores e montará os casos de uso | Tudo |
+
+As duas primeiras linhas são verificadas pelo `depguard` no `golangci-lint`; um import fora da lista quebra a CI.
+
 ## Ambiente de desenvolvimento
 
 O Go e as ferramentas de qualidade rodam num contêiner, definido em `compose.yaml` e em `deploy/dev/Dockerfile`. Não é preciso instalar o Go na máquina.
