@@ -4,10 +4,6 @@ import (
 	"flag"
 	"log/slog"
 
-	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/dlp"
-	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/injection"
-	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/schema"
-	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/untrusted"
 	"github.com/aluiziodeveloper/guarita-curso/internal/app"
 	"github.com/aluiziodeveloper/guarita-curso/internal/domain"
 )
@@ -38,51 +34,6 @@ func inspectFlags(flags *flag.FlagSet, c *inspectConfig) {
 	flags.BoolVar(&c.mark, "mark-untrusted", false,
 		"marca o texto dos resultados como conteúdo não confiável")
 	classifierFlags(flags, &c.classifier)
-}
-
-// resultOptions monta a revisão do caminho de volta. As regras vêm
-// antes do classificador: custam microssegundos, e um sinal forte
-// barra o resultado sem perguntar ao modelo. Sem nenhuma das opções,
-// a Guarita nem lê as respostas de tools/call.
-func resultOptions(
-	c inspectConfig, classifier app.ResultInspector,
-) []app.Option {
-	var options []app.Option
-	if c.results {
-		options = append(options, app.WithResultInspectors(
-			injection.New(injection.DefaultActions())))
-	}
-	if classifier != nil {
-		options = append(options, app.WithResultInspectors(classifier))
-	}
-	if c.mark {
-		options = append(options, app.WithResultMarker(untrusted.New()))
-	}
-	return options
-}
-
-// inspectors monta os inspetores de uma rota. O esquema vem antes: é a
-// conferência mais barata e a que recusa a forma inesperada sem olhar o
-// conteúdo. Cada inspeção com achados vai para o registro.
-func inspectors(
-	c inspectConfig, catalog *app.PinCatalog, logger *slog.Logger,
-) []app.Option {
-	var chosen []app.Inspector
-	if c.validation && catalog != nil {
-		chosen = append(chosen, schema.New(catalog))
-	}
-	if c.dlp {
-		var options []dlp.Option
-		if hosts := list(c.hosts); len(hosts) > 0 {
-			options = append(options, dlp.WithAllowedHosts(hosts...))
-		}
-		chosen = append(chosen, dlp.New(dlp.DefaultActions(), c.entropy,
-			options...))
-	}
-	return []app.Option{
-		app.WithInspectors(chosen...),
-		app.WithFindings(logFindings(logger)),
-	}
 }
 
 // logFindings registra o que o inspetor achou: campo e sinal, sem os
