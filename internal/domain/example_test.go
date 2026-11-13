@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/aluiziodeveloper/guarita-curso/domain"
+	"github.com/aluiziodeveloper/guarita-curso/internal/domain"
 )
 
 func ExampleDecision_Validate() {
