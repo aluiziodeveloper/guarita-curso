@@ -3,6 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log/slog"
+	"slices"
+	"strings"
 
 	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/dlp"
 	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/injection"
@@ -21,7 +24,12 @@ const (
 	stageMark       = "mark"
 )
 
-var errStageConfig = errors.New("stage needs configuration")
+var (
+	errStageConfig  = errors.New("stage needs configuration")
+	errPipelineFlag = errors.New(
+		"-pipeline must be name=stage,… or stage,…, once per route")
+	errMissingStage = errors.New("route lacks a required stage")
+)
 
 // registry diz como criar cada etapa com a configuração da Guarita.
 // Uma etapa nova entra aqui, e em nenhum outro lugar: a montagem, o
@@ -98,4 +106,66 @@ func defaultStages(c inspectConfig, hasCatalog bool) []string {
 		}
 	}
 	return names
+}
+
+// pipelineFlag lê -pipeline, que pode se repetir: nome=etapas para a
+// rota de -server com esse nome; só etapas, para as rotas sem linha
+// própria. Uma lista vazia, como em "mail=", é uma rota sem etapas.
+func pipelineFlag(c *inspectConfig) func(string) error {
+	return func(value string) error {
+		route, stages, named := strings.Cut(value, "=")
+		if !named {
+			route, stages = "*", value
+		} else if !validServerName.MatchString(route) {
+			return errPipelineFlag
+		}
+		if _, repeated := c.pipelines[route]; repeated {
+			return errPipelineFlag
+		}
+		if c.pipelines == nil {
+			c.pipelines = map[string][]string{}
+		}
+		c.pipelines[route] = list(stages)
+		return nil
+	}
+}
+
+// routeLine monta a linha de uma rota: a dela, se houver; senão, a de
+// -pipeline sem nome; senão, a das opções dos módulos anteriores. A
+// rota sem uma etapa de -require-stages não sobe.
+func routeLine(
+	c inspectConfig, route string, catalog *app.PinCatalog,
+	classifier app.ResultInspector, logger *slog.Logger,
+) (pipeline.Pipeline, error) {
+	names, ok := c.pipelines[route]
+	if !ok || route == "" {
+		names, ok = c.pipelines["*"]
+	}
+	if !ok {
+		names = defaultStages(c, catalog != nil)
+	}
+	line, err := registry(c, catalog, classifier).Build(names)
+	if err != nil {
+		return line, fmt.Errorf("route %q: %w", route, err)
+	}
+	if missing := line.Missing(c.required); len(missing) > 0 {
+		return line, fmt.Errorf("%w: route %q: %s", errMissingStage,
+			route, strings.Join(missing, ","))
+	}
+	logger.Info("linha de inspetores", "server", route,
+		"stages", line.Names)
+	return line, nil
+}
+
+// checkRoutes recusa -pipeline com o nome de uma rota que não existe:
+// o erro de digitação deixaria a rota certa com a linha padrão.
+func (c config) checkRoutes() error {
+	for route := range c.inspect.pipelines {
+		if route == "*" || slices.ContainsFunc(c.servers,
+			func(s upstreamServer) bool { return s.name == route }) {
+			continue
+		}
+		return fmt.Errorf("%w: no -server %q", errPipelineFlag, route)
+	}
+	return nil
 }
