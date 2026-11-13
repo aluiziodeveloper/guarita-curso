@@ -45,11 +45,14 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Chamada de ferramentas | Ciclo em que o modelo pede uma ferramenta e recebe o resultado como mensagem | 01 |
 | Chave duplicada | Mesmo nome duas vezes num objeto JSON, com leitura imprevisível | 07 |
 | CI | Integração contínua: compilação e testes automáticos a cada push, no GitHub Actions | 01 |
+| Classificador estatístico | Inspetor que dá uma probabilidade, e cujos erros só se descrevem por uma medida | 16 |
 | Comparação em tempo constante | Comparação cujo tempo não depende de onde os valores diferem | 13 |
 | Concessão | A decisão dada a um agente, num servidor, para uma ferramenta | 12 |
 | Confiança no primeiro uso | Aceitar e fixar o que se vê da primeira vez, e comparar depois | 10 |
 | Confusão de algoritmo | Aceitar o algoritmo que o atacante escreveu no cabeçalho | 09 |
+| Conjunto de desenvolvimento | Exemplos usados para ajustar o *prompt* e escolher o limiar | 16 |
 | Conjunto de métodos | Métodos que pertencem a `T` ou a `*T`; decide a satisfação de interfaces | 03 |
+| Conjunto de teste | Exemplos pontuados uma vez, com tudo já escolhido | 16 |
 | Consulta parametrizada | Texto da consulta e valores enviados separados | 10 |
 | Conteúdo não confiável (*untrusted content*) | Conteúdo que vem de fora, como o resultado de uma ferramenta, e não pode valer como instrução | 15 |
 | Contrabando de mensagem | Segunda mensagem colada depois da primeira na mesma linha | 07 |
@@ -84,6 +87,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Ferramenta | Capacidade anunciada por um servidor MCP, com nome, descrição e esquema | 01 |
 | Fluxo de eventos (SSE) | Resposta `text/event-stream`, com eventos enviados um a um | 08 |
 | Forma canônica | Uma única maneira de escrever um valor, para que o hash seja sempre o mesmo | 10 |
+| FPR | Fração dos legítimos que foram barrados | 16 |
 | Fronteira de confiança (*trust boundary*) | Ponto em que dados de uma parte passam a influenciar decisões de outra | 01 |
 | Fuzzing | Teste que gera entradas guiado pela cobertura de código | 07 |
 | Goroutine | Função executando de forma independente, gerida pelo runtime de Go | 06 |
@@ -94,11 +98,14 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Inversão de dependência | O núcleo declara a interface; a infraestrutura a satisfaz | 05 |
 | JSON-RPC | Formato de chamada remota em JSON usado por todas as mensagens MCP | 01 |
 | JWT | Token com afirmações assinadas, em três partes | 09 |
+| Limiar | Pontuação a partir da qual o resultado é barrado | 16 |
 | Lista de destinos | Os hosts para onde uma URL nos argumentos pode apontar | 14 |
 | Lista de permissão | Regra que só aceita o que foi declarado; o resto fica de fora até ser ligado | 05 |
+| Log-probabilidade | Logaritmo natural da probabilidade de um token numa posição | 16 |
 | Lote | Array de mensagens JSON-RPC, removido do MCP | 07 |
 | Marcador sintético | Texto fixo do laboratório, sem correspondência com um segredo real | 01 |
 | Marcação de procedência | Delimitar o conteúdo não confiável e dizer de onde ele veio | 15 |
+| Matriz de confusão | Contagem de verdadeiros e falsos positivos e negativos num limiar | 16 |
 | Menor privilégio (*least privilege*) | Cada agente opera com o mínimo necessário para a tarefa | 12 |
 | Middleware | `http.Handler` que embrulha outro, como um decorador | 08 |
 | Migração | Passo numerado de mudança no esquema do banco | 10 |
@@ -112,6 +119,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Notificação | Mensagem com `method` e sem `id`, que não recebe resposta | 07 |
 | Opção funcional | Função que ajusta um valor em construção | 05 |
 | Origem | Esquema, nome e porta de uma página | 08 |
+| Orçamento de falsos positivos | A FPR máxima aceita, fixada antes da medida | 16 |
 | Pacote de teste externo | Pacote `x_test` que só enxerga a API exportada de `x` | 03 |
 | Parser estrito | Parser que recusa a mensagem inteira diante de qualquer ambiguidade | 07 |
 | Parâmetro variádico | Último parâmetro `...T`, recebido como fatia | 04 |
@@ -120,11 +128,13 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | PEM | Texto em Base64 entre marcadores, com a chave em PKIX ou PKCS #8 | 09 |
 | PEP | Ponto que intercepta a chamada e aplica a decisão: o `InterceptCall` | 12 |
 | Pin (*pinning*) | Definição fixada de uma ferramenta num servidor | 10 |
+| Plano B | Defesa mais fraca que decide no lugar da principal, por escolha do operador | 16 |
 | Plano do agente | O endpoint MCP e os tokens dos agentes | 13 |
 | Plano do operador | A interface de aprovação e as credenciais dos operadores | 13 |
 | Políticas como código (*policy as code*) | Regras de autorização versionadas, revisadas e testadas como o resto do código | 12 |
 | Porta | Conversa com propósito, expressa como interface do caso de uso | 05 |
 | Portas e adaptadores (*ports and adapters*) | Outro nome da arquitetura hexagonal: o núcleo fala com o mundo por portas, e cada tecnologia é um adaptador | 05 |
+| Precisão | Fração dos barrados que eram ataque | 16 |
 | Proxy reverso | Servidor que recebe pedidos em nome de outro e os repassa | 08 |
 | Quórum | Número de operadores diferentes exigido para aprovar | 13 |
 | Raiz de composição | O ponto, em `cmd/guarita`, que escolhe e monta os adaptadores | 05 |
@@ -136,6 +146,8 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Regra de dependência | Dependências de código apontam para o núcleo | 05 |
 | Repositório | Porta que esconde onde e como os dados ficam | 10 |
 | Restrição de compilação | Linha `//go:build` que decide se um arquivo entra no pacote | 06 |
+| Resumo do modelo | O SHA-256 que identifica o arquivo do modelo, ao contrário do nome | 16 |
+| Revocação | Fração dos ataques que foram barrados | 16 |
 | Runa | Valor de um ponto de código Unicode em Go, um `int32` | 11 |
 | Semente fixa | Valor inicial do gerador que torna os casos reprodutíveis | 14 |
 | Servidor de autorização | Quem autentica o usuário e emite tokens | 09 |
