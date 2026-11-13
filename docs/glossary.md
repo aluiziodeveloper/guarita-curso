@@ -8,16 +8,22 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 
 | Termo | Significado | Módulo |
 |---|---|---|
+| *Capability* | Um pedaço dos poderes do root, que o processo pode ter ou não | 18 |
+| *Cgroup* | Limite de recursos, como memória e processos, para um grupo de processos | 18 |
 | *Confused deputy* | Componente com privilégio que age em nome de quem não o tem | 04 |
 | *Fixture* | Entrada de teste gravada em arquivo, com o resultado esperado | 15 |
+| *Link following* | Abrir pelo nome sem conferir para onde um *link* aponta (CWE-59) | 18 |
+| *Seccomp* | Filtro das chamadas ao kernel que um processo pode fazer | 18 |
 | *Slowloris* | Ataque que prende conexões enviando o pedido devagar | 08 |
 | *Spotlighting* | Família de técnicas de marcação de procedência para modelos de linguagem | 15 |
+| *Symlink* | Arquivo cujo conteúdo é um caminho, seguido por quem o abre pelo nome | 18 |
 | *Token passthrough* | Repassar ao destino um token que não foi emitido para ele | 09 |
 | `errgroup` | Grupo de goroutines com erro e cancelamento compartilhados | 06 |
 | `fmt.Stringer` | Interface com `String() string`, usada pela formatação | 04 |
 | `internal` | Pasta cujos pacotes só podem ser importados dentro do mesmo prefixo de caminho | 01 |
 | `iota` | Contador de linhas de um bloco `const`, começando em 0 | 04 |
 | `opa test` | O executor de testes escritos em Rego | 12 |
+| `os.Root` | Diretório aberto cujos métodos não alcançam nada fora dele | 18 |
 | `select` | Espera o primeiro de vários canais | 06 |
 | `slog.LogValuer` | Interface com que um valor diz como quer ser registrado | 09 |
 | `sync.Mutex` | Trava de exclusão mútua: uma goroutine por vez entre `Lock` e `Unlock` | 07 |
@@ -59,6 +65,8 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Conteúdo não confiável (*untrusted content*) | Conteúdo que vem de fora, como o resultado de uma ferramenta, e não pode valer como instrução | 15 |
 | Contrabando de mensagem | Segunda mensagem colada depois da primeira na mesma linha | 07 |
 | Contrapressão | Espera que volta até quem envia quando o destino não acompanha | 06 |
+| Controle negativo | Caso que precisa falhar de um jeito conhecido para validar a medida | 18 |
+| Contêiner órfão | Contêiner que continua rodando depois de o cliente que o iniciou morrer | 18 |
 | Corpus de ataques | Conjunto de entradas em arquivos, cada uma com o resultado esperado | 11 |
 | Corpus de sementes | Entradas iniciais do fuzzing, de `f.Add` e de `testdata/fuzz` | 07 |
 | Corrida de dados | Acesso concorrente sem ordem a um valor, com ao menos uma escrita | 06 |
@@ -93,6 +101,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Forma canônica | Uma única maneira de escrever um valor, para que o hash seja sempre o mesmo | 10 |
 | FPR | Fração dos legítimos que foram barrados | 16 |
 | Fronteira de confiança (*trust boundary*) | Ponto em que dados de uma parte passam a influenciar decisões de outra | 01 |
+| Fuga de sandbox (*sandbox escape*) | Um servidor isolado alcança o que está fora do isolamento, como os arquivos do host | 18 |
 | Fuzzing | Teste que gera entradas guiado pela cobertura de código | 07 |
 | Goroutine | Função executando de forma independente, gerida pelo runtime de Go | 06 |
 | Impressão digital | SHA-256 da forma canônica da definição | 10 |
@@ -120,6 +129,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Máquina de estados | Conjunto fechado de estados e das transições permitidas entre eles | 13 |
 | Módulo | Unidade Go que declara caminho, versão mínima e dependências | 01 |
 | Namespace (de servidor) | Nome que o operador dá a um servidor, e o caminho dele na Guarita | 11 |
+| Namespace (do Linux) | Visão própria de processos, rede ou sistema de arquivos para um processo | 18 |
 | Negação por padrão | Tudo é negado, salvo o que for concedido | 12 |
 | Normalização | Escolher uma escrita só para textos equivalentes (NFC, NFKC) | 11 |
 | Notificação | Mensagem com `method` e sem `id`, que não recebe resposta | 07 |
@@ -134,6 +144,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Pedido | Mensagem JSON-RPC com `method` e `id`, que espera resposta | 07 |
 | PEM | Texto em Base64 entre marcadores, com a chave em PKIX ou PKCS #8 | 09 |
 | PEP | Ponto que intercepta a chamada e aplica a decisão: o `InterceptCall` | 12 |
+| PID 1 | O primeiro processo de um namespace, que só recebe os sinais que trata | 18 |
 | Pin (*pinning*) | Definição fixada de uma ferramenta num servidor | 10 |
 | Plano B | Defesa mais fraca que decide no lugar da principal, por escolha do operador | 16 |
 | Plano do agente | O endpoint MCP e os tokens dos agentes | 13 |
@@ -166,6 +177,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Sinal forte | Sinal que um resultado legítimo quase nunca tem; barra | 15 |
 | Sinal fraco | Sinal comum também em resultados legítimos; só é registrado | 15 |
 | Sombreamento de ferramenta (*tool shadowing*) | Um servidor anuncia uma ferramenta com o nome que outro já usa | 11 |
+| Sonda | Programa que mede, de dentro, o que um ambiente deixa fazer | 18 |
 | STRIDE | Seis categorias de ameaça, cada uma ligada a uma propriedade de segurança | 04 |
 | Suíte de ataques | Testes que rodam cada ataque sem e com a defesa | 10 |
 | Teste de camada ausente | Ablação: tirar uma camada de cada vez e ver o que passa | 17 |
@@ -174,6 +186,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Teste de propriedade | Teste que afirma algo sobre uma família de casos e o confere em casos gerados | 14 |
 | Teste orientado a tabelas (*table-driven tests*) | Casos nomeados numa fatia, executados pelo mesmo laço com subtestes | 03 |
 | Tipo definido | Tipo novo, com identidade própria, declarado a partir de um tipo subjacente | 03 |
+| TOCTOU | A janela entre conferir algo e usá-lo, em que ele pode mudar | 18 |
 | Toolchain | Compilador e ferramentas acessados pelo comando `go` | 01 |
 | Troca silenciosa (*rug pull*) | O servidor muda a definição de uma ferramenta depois de aprovada | 10 |
 | Validar em vez de normalizar | Aceitar ou recusar os dados como vieram, sem consertá-los | 11 |
@@ -194,6 +207,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | CI | Integração contínua (*continuous integration*) | 01 |
 | CPF | Cadastro de Pessoas Físicas | 04 |
 | CSRF | Falsificação de pedido entre sites (*cross-site request forgery*) | 08 |
+| CWE | Catálogo de fraquezas do MITRE (*Common Weakness Enumeration*) | 18 |
 | DLP | Prevenção contra vazamento de dados (*data loss prevention*) | 14 |
 | HMAC | Resumo com chave, que só quem tem a chave calcula (*hash-based message authentication code*) | 09 |
 | JWT | Token assinado em JSON (*JSON Web Token*) | 08 |
@@ -207,3 +221,4 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | SSE | Fluxo de eventos enviados pelo servidor (*Server-Sent Events*) | 08 |
 | SSRF | Falsificação de pedido pelo servidor (*server-side request forgery*) | 08 |
 | STRIDE | As seis categorias de ameaça: falsificação de identidade, adulteração, repúdio, divulgação de informação, negação de serviço e elevação de privilégio | 04 |
+| TOCTOU | Do momento da conferência ao momento do uso (*time of check to time of use*) | 18 |
