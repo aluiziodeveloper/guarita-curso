@@ -14,18 +14,24 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | `internal` | Pasta cujos pacotes só podem ser importados dentro do mesmo prefixo de caminho | 01 |
 | `iota` | Contador de linhas de um bloco `const`, começando em 0 | 04 |
 | `select` | Espera o primeiro de vários canais | 06 |
+| `sync.Mutex` | Trava de exclusão mútua: uma goroutine por vez entre `Lock` e `Unlock` | 07 |
 | Adaptador | Peça de tecnologia que encaixa numa porta | 05 |
 | ADR | Registro de decisão de arquitetura: uma decisão, com o contexto e as consequências | 01 |
 | Agente | Aplicação que coordena o modelo e as conexões com servidores MCP | 01 |
 | Arquitetura hexagonal (*hexagonal architecture*) | Núcleo isolado da infraestrutura, conversando por portas | 05 |
+| Arquivo *golden* | Arquivo com a saída esperada de um teste, regravado de propósito | 07 |
 | Ativo | O que a Guarita precisa proteger | 04 |
 | Build em múltiplos estágios | Dockerfile que compila num estágio e copia só o resultado para outro | 01 |
+| Camada anticorrupção | Camada que traduz entre o protocolo externo e o domínio | 07 |
 | Canal | Cano tipado entre goroutines, que também sincroniza | 06 |
 | Caso de uso | Operação da aplicação, como `InterceptCall` | 05 |
 | Chamada de ferramentas | Ciclo em que o modelo pede uma ferramenta e recebe o resultado como mensagem | 01 |
+| Chave duplicada | Mesmo nome duas vezes num objeto JSON, com leitura imprevisível | 07 |
 | CI | Integração contínua: compilação e testes automáticos a cada push, no GitHub Actions | 01 |
 | Conjunto de métodos | Métodos que pertencem a `T` ou a `*T`; decide a satisfação de interfaces | 03 |
+| Contrabando de mensagem | Segunda mensagem colada depois da primeira na mesma linha | 07 |
 | Contrapressão | Espera que volta até quem envia quando o destino não acompanha | 06 |
+| Corpus de sementes | Entradas iniciais do fuzzing, de `f.Add` e de `testdata/fuzz` | 07 |
 | Corrida de dados | Acesso concorrente sem ordem a um valor, com ao menos uma escrita | 06 |
 | Dono de goroutine | Código que a inicia, a faz parar e espera o fim dela | 06 |
 | Dublê de teste (*test double*) | Substituto de uma dependência durante o teste | 05 |
@@ -39,17 +45,22 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Fechamento | Função que captura variáveis do escopo em que foi criada | 01 |
 | Ferramenta | Capacidade anunciada por um servidor MCP, com nome, descrição e esquema | 01 |
 | Fronteira de confiança (*trust boundary*) | Ponto em que dados de uma parte passam a influenciar decisões de outra | 01 |
+| Fuzzing | Teste que gera entradas guiado pela cobertura de código | 07 |
 | Goroutine | Função executando de forma independente, gerida pelo runtime de Go | 06 |
 | Inversão de dependência | O núcleo declara a interface; a infraestrutura a satisfaz | 05 |
 | JSON-RPC | Formato de chamada remota em JSON usado por todas as mensagens MCP | 01 |
 | Lista de permissão | Regra que só aceita o que foi declarado; o resto fica de fora até ser ligado | 05 |
+| Lote | Array de mensagens JSON-RPC, removido do MCP | 07 |
 | Marcador sintético | Texto fixo do laboratório, sem correspondência com um segredo real | 01 |
 | Modelo de ameaças | Documento versionado com ativos, zonas, fronteiras e ameaças, mantido junto do código | 04 |
 | Modelo de domínio anêmico | Tipos com nomes de negócio e pouco ou nenhum comportamento próprio | 03 |
 | Módulo | Unidade Go que declara caminho, versão mínima e dependências | 01 |
+| Notificação | Mensagem com `method` e sem `id`, que não recebe resposta | 07 |
 | Opção funcional | Função que ajusta um valor em construção | 05 |
 | Pacote de teste externo | Pacote `x_test` que só enxerga a API exportada de `x` | 03 |
+| Parser estrito | Parser que recusa a mensagem inteira diante de qualquer ambiguidade | 07 |
 | Parâmetro variádico | Último parâmetro `...T`, recebido como fatia | 04 |
+| Pedido | Mensagem JSON-RPC com `method` e `id`, que espera resposta | 07 |
 | Porta | Conversa com propósito, expressa como interface do caso de uso | 05 |
 | Portas e adaptadores (*ports and adapters*) | Outro nome da arquitetura hexagonal: o núcleo fala com o mundo por portas, e cada tecnologia é um adaptador | 05 |
 | Raiz de composição | O ponto, em `cmd/guarita`, que escolhe e monta os adaptadores | 05 |

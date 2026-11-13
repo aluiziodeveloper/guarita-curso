@@ -63,8 +63,14 @@ Estado `open` significa que a Guarita ainda não tem a defesa. A conferência op
 | `credential-theft` | Repasse ou roubo de credenciais (*confused deputy*) | spoofing, information-disclosure | guarita->mcp-server | 9 | open |
 | `supply-chain` | Pacote de servidor comprometido | tampering | operator->mcp-server | 21 | open |
 | `resource-abuse` | Laços de chamadas que esgotam cota ou custo | denial-of-service | agent->guarita | 19 | open |
-| `insecure-parsing` | Mensagem malformada ou ambígua no protocolo | tampering, denial-of-service | agent->guarita | 7 | open |
+| `insecure-parsing` | Mensagem malformada ou ambígua no protocolo | tampering, denial-of-service | agent->guarita | 7 | partially-mitigated |
 | `approval-forgery` | Aprovação forjada ou obtida por fadiga | spoofing, repudiation | operator->guarita | 13 | open |
+
+## Defesas em vigor
+
+| ID | Desde | O que cobre | Testes de ataque | O que falta |
+|---|---|---|---|---|
+| `insecure-parsing` | Módulo 7 | Parser estrito das mensagens do agente no transporte stdio: um valor por linha, sem chave repetida, sem lote, UTF-8, aninhamento e tamanho limitados | `internal/adapters/mcpproxy`: contrabando, chave duplicada, mensagem grande, golden e fuzzing | Respostas do servidor (desafio do Módulo 7) e transporte HTTP (Módulo 8) |
 
 ## A cena do Módulo 4: o *confused deputy*
 
