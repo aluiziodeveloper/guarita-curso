@@ -19,3 +19,4 @@ Thumbs.db
 
 # Segredos gerados pelos laboratórios de implantação
 /deploy/prod/secrets/
+/deploy/k8s/.lab.*/

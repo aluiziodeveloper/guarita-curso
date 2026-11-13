@@ -127,7 +127,9 @@ func (uc *InterceptCall) Run(
 }
 
 // Authorize decide a chamada sem repassá-la, e registra a decisão na
-// trilha de auditoria, se houver uma: nil só para allow.
+// trilha de auditoria, se houver uma. Devolve nil para a chamada que
+// pode seguir: a permitida e, desde o Módulo 13, a que esperou a
+// aprovação e foi aprovada por um operador.
 func (uc *InterceptCall) Authorize(
 	ctx context.Context, call domain.Call,
 ) error {

@@ -27,8 +27,8 @@ Até o Módulo 21, os padrões eram os de um laboratório. No modo HTTP, sem `-a
 
 ## Consequências
 
-- O perfil de CPU sob carga mostrou as expressões regulares do inspetor de injeção em 13,8% do tempo; o descarte por `strings.Contains` levou a etapa de 68,3 µs para 12,7 µs e a vazão do processo de 6549 para 7201 chamadas por segundo, nas medianas de três execuções.
-- Na execução gravada na *tag* `aula-22-17`, a Guarita acrescentou no p99 0,41 ms com a política, 0,54 ms com os inspetores, 0,69 ms com as métricas e 2,62 ms com a trilha. Os números variam de uma execução para outra; na CI, foram de 0,27 a 0,41 ms, e 0,70 ms com a trilha.
+- No laboratório de referência (um Intel Core i7-13700H), o perfil de CPU sob carga mostrou as expressões regulares do inspetor de injeção em 13,8% do tempo; o descarte por `strings.Contains` levou a etapa de 68,3 µs para 12,7 µs e a vazão do processo de 6549 para 7201 chamadas por segundo, nas medianas de três execuções.
+- No mesmo laboratório, a Guarita acrescentou no p99 0,41 ms com a política, 0,54 ms com os inspetores, 0,69 ms com as métricas e 2,62 ms com a trilha. Os números são dessa máquina, e não de uma execução guardada no repositório, e variam de uma execução para outra; na CI, foram de 0,27 a 0,41 ms, e 0,70 ms com a trilha.
 - A imagem tem 35,7 MB, contra 885,8 MB da imagem do Go.
 - A implantação achou dois defeitos, corrigidos: o recurso de uma rota nomeada usava o endereço da escuta, e a regra do segredo recusava o Secret do Kubernetes.
 - Todo laboratório e todo teste do modo HTTP sem token passam a escrever `-insecure-no-auth`.

@@ -22,11 +22,18 @@ const usage = "uso: guarita [-allow ferramenta,… | -policy dir] -- " +
 	"<comando do servidor MCP> [argumentos]\n" +
 	"     guarita approvals [-admin URL] -secret arquivo list|approve|deny\n" +
 	"     guarita digest <comando>\n" +
+	"     guarita audit verify [-head hash] arquivo\n" +
 	"     guarita [-allow … | -policy dir] [-listen endereço] [-host …] " +
 	"[-origin …] [-server nome=URL …] " +
 	"-upstream <URL do servidor MCP>"
 
 var errUsage = errors.New(usage)
+
+// errValidationCatalog recusa -validate-arguments sem o catálogo: o
+// inputSchema fixado mora nele, e sem ele não há contra o que validar.
+var errValidationCatalog = errors.New(
+	"-validate-arguments needs -catalog: the pinned inputSchema " +
+		"lives in the catalog")
 
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(),
@@ -156,6 +163,9 @@ func parseConfig(args []string, stderr io.Writer) (config, error) {
 		if err := checkStdioFlags(flags); err != nil {
 			return config{}, errors.Join(err, errUsage)
 		}
+	}
+	if c.inspect.validation && c.catalogFile == "" {
+		return config{}, errValidationCatalog
 	}
 	c.allow = list(*allow)
 	c.hosts, c.origins = list(*hosts), list(*origins)

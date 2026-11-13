@@ -20,7 +20,7 @@ Os detectores do Módulo 15 barram sinais de estrutura, e um texto hostil visív
 ## Alternativas consideradas
 
 1. **Ler a resposta do modelo como texto, ou pedir um JSON com uma nota.** Rejeitada: um "YES" escrito não tem grau, e não há limiar para escolher; a nota que o modelo escreve é mais um texto gerado, e não uma probabilidade.
-2. **Um modelo menor, mais rápido.** Rejeitada pela medida: `qwen2.5:3b` teve mediana de 409 ms, mas, no limiar escolhido, barrou 2 de 30 ataques do teste; com `qwen2.5:1.5b`, nenhum limiar ficou dentro do orçamento de falsos positivos.
+2. **Um modelo menor, mais rápido.** Rejeitada pela medida: `qwen2.5:3b` teve mediana de 408 ms, mas, no limiar escolhido, barrou 2 de 30 ataques do teste; com `qwen2.5:1.5b`, nenhum limiar ficou dentro do orçamento de falsos positivos.
 3. **Falhar aberto quando o modelo cai, como o ingênuo.** Rejeitada: transforma a falha do classificador num desvio da defesa.
 4. **Ajustar o *prompt* e o limiar olhando o conjunto de teste.** Rejeitada: a medida do teste deixaria de dizer como o classificador se sai num texto que ele não viu.
 5. **Um modelo hospedado por terceiros.** Rejeitada para o curso: o resultado das ferramentas sairia da máquina, e a disponibilidade dependeria de outro serviço.

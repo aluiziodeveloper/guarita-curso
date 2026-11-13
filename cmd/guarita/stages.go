@@ -92,15 +92,17 @@ func newDLP(c inspectConfig) *dlp.Inspector {
 // defaultStages traduz as opções dos Módulos 14 a 19 para a linha de
 // todas as rotas: na ida, a cota primeiro, para que um laço não pague
 // as outras etapas, e o esquema antes do DLP; na volta, as regras antes
-// do classificador, e a marcação no fim.
-func defaultStages(c inspectConfig, catalog, quota bool) []string {
+// do classificador, e a marcação no fim. O esquema entra sempre que
+// -validate-arguments foi pedida: sem o catálogo, a fábrica da etapa
+// recusa a partida, em vez de a linha subir sem ela.
+func defaultStages(c inspectConfig, quota bool) []string {
 	var names []string
 	for _, stage := range []struct {
 		on   bool
 		name string
 	}{
 		{quota, stageQuota},
-		{c.validation && catalog, stageSchema},
+		{c.validation, stageSchema},
 		{c.dlp, stageDLP},
 		{c.results, stageInjection},
 		{c.classifier.endpoint != "", stageClassifier},
@@ -147,7 +149,7 @@ func routeLine(
 		names, ok = c.pipelines["*"]
 	}
 	if !ok {
-		names = defaultStages(c, catalog != nil, d.quota != nil)
+		names = defaultStages(c, d.quota != nil)
 	}
 	line, err := registry(c, catalog, d).Build(names)
 	if err != nil {

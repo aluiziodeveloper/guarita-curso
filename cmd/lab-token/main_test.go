@@ -16,7 +16,7 @@ import (
 // O token emitido pela ferramenta passa no verificador da Guarita, e a
 // chave privada nasce legível só pelo dono.
 func TestRun_geraChavesEEmiteToken(t *testing.T) {
-	dir := t.TempDir()
+	dir := filepath.Join(t.TempDir(), "lab") // ainda não existe
 	if err := run([]string{"-genkey", "-out", dir}, nil); err != nil {
 		t.Fatalf("-genkey: %v", err)
 	}

@@ -177,7 +177,7 @@ A partir do Módulo 9, a Guarita autentica o agente com um JWT assinado em Ed255
 ```bash
 go run ./cmd/lab-token -genkey -out lab/            # agent.key (0600) e agent.pub
 printf 'credencial-da-guarita\n' > lab/cred && chmod 600 lab/cred
-./guarita -insecure-no-auth -allow read_file -upstream http://127.0.0.1:9000/mcp \
+./guarita -allow read_file -upstream http://127.0.0.1:9000/mcp \
   -agent-key lab/agent.pub -agent-issuer https://auth.lab.test \
   -upstream-credential lab/cred
 go run ./cmd/lab-token -key lab/agent.key -iss https://auth.lab.test \
@@ -216,6 +216,8 @@ A partir do Módulo 11, a Guarita protege vários servidores ao mesmo tempo. Cad
 
 O namespace tem de 1 a 32 caracteres em `[a-z0-9-]`. Cada servidor é um recurso protegido próprio: o *token* do agente precisa ter na audiência o endereço daquele caminho, e os metadados ficam em `/.well-known/oauth-protected-resource/mcp/{namespace}`.
 
+A credencial da Guarita é por servidor: `-server-credential nome=arquivo` dá ao servidor daquele namespace a credencial do arquivo (com permissão `0600`, como a de `-upstream-credential`, que continua valendo para `-upstream`). Um servidor nunca recebe a credencial de outro, e uma credencial para um namespace que não existe impede a partida.
+
 Com `-catalog`, toda definição passa antes por uma varredura estrutural: é recusada a que tem caracteres de formatação (largura zero, controles de direção, *tags* Unicode), caracteres de controle, texto que muda sob NFKC ou nome fora do conjunto da especificação (`[A-Za-z0-9_.-]`, até 128 caracteres). Uma ferramenta cujo nome, ignorando maiúsculas e trocando `-` e `.` por `_`, já foi fixado por outro servidor também é recusada. Cada recusa aparece no registro com o servidor, a ferramenta, o motivo e os sinais.
 
 ## Políticas em Rego
@@ -250,6 +252,25 @@ A interface do operador fica noutra escuta, só em loopback: `http://127.0.0.1:8
 ```
 
 Cada pedido expira em `-approval-timeout` (2 min). Cada agente tem no máximo `-approval-max-pending` pedidos pendentes (3), e a mesma chamada negada por um operador é negada na hora por `-approval-cooldown` (10 min). O agente não decide o próprio pedido, e uma decisão não se repete.
+
+## Inspeção dos argumentos
+
+A partir do Módulo 14, a Guarita pode examinar os argumentos de uma chamada que a política não negou, antes de ela seguir:
+
+```bash
+./guarita -insecure-no-auth -allow http_request -catalog catalog.db \
+  -upstream http://127.0.0.1:9000/mcp \
+  -dlp -allow-hosts lab.test,.api.lab.test -validate-arguments
+```
+
+| Opção | Efeito |
+|---|---|
+| `-dlp` | Procura, em todas as strings dos argumentos, CPF com dígitos verificadores válidos, formatos públicos de chave (AWS, GitHub, Slack, chave privada), o mesmo dentro de base64 e tokens de entropia alta. Chave nega; CPF e entropia pedem aprovação. Cada texto é examinado como foi escrito e na forma NFKC, que traz os dígitos de largura total para o ASCII |
+| `-dlp-entropy` | Limiar, em bits por caractere, a partir do qual um token de 24 caracteres ou mais é tratado como segredo (padrão 4,3) |
+| `-allow-hosts` | Hosts permitidos nas URLs dos argumentos, separados por vírgula; `.dominio` vale para os subdomínios. Uma URL para outro host nega a chamada |
+| `-validate-arguments` | Valida os argumentos contra o `inputSchema` da definição fixada. Exige `-catalog`: sem ele, a Guarita não sobe |
+
+Os achados vão para o registro com o campo, o sinal e um detalhe, nunca com o valor. A ordem é o esquema antes do DLP.
 
 ## Revisão das respostas
 

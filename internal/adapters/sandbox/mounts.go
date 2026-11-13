@@ -28,7 +28,9 @@ var secrets = []string{
 // CheckMount resolve a origem da montagem, seguindo cada symlink, e
 // confere o caminho real. Ele não pode ficar num diretório do sistema
 // ou de credenciais, nem conter um deles; e pode ficar dentro da home,
-// mas não contê-la inteira. A montagem devolvida tem a origem
+// mas não contê-la inteira. Os dois lados da comparação são
+// resolvidos: no macOS, /etc e /var são symlinks para /private, e a
+// home pode chegar por um atalho. A montagem devolvida tem a origem
 // resolvida, e é ela que vai para o Docker.
 func CheckMount(m Mount, home string) (Mount, error) {
 	if !filepath.IsAbs(m.Source) || !filepath.IsAbs(m.Target) {
@@ -44,7 +46,7 @@ func CheckMount(m Mount, home string) (Mount, error) {
 				denied)
 		}
 	}
-	if home != "" && within(home, real) {
+	if home != "" && (within(home, real) || within(resolve(home), real)) {
 		return m, fmt.Errorf("%w: %s contains the home", ErrMount, real)
 	}
 	m.Source, m.Target = real, filepath.Clean(m.Target)
@@ -52,15 +54,40 @@ func CheckMount(m Mount, home string) (Mount, error) {
 }
 
 // forbidden junta os diretórios do sistema e os de credenciais da
-// home.
+// home, cada um como foi escrito e como o sistema de arquivos o
+// resolve: a origem chega resolvida, e a lista precisa estar também.
 func forbidden(home string) []string {
-	out := slices.Clone(system)
+	listed := slices.Clone(system)
 	if home != "" {
 		for _, dir := range secrets {
-			out = append(out, filepath.Join(home, dir))
+			listed = append(listed, filepath.Join(home, dir))
+		}
+	}
+	out := make([]string, 0, 2*len(listed))
+	for _, dir := range listed {
+		out = append(out, dir)
+		if real := resolve(dir); real != dir {
+			out = append(out, real)
 		}
 	}
 	return out
+}
+
+// resolve segue os symlinks do caminho. O que ainda não existe, como
+// um ~/.aws nunca criado, é resolvido até o último pai que existe, e
+// o resto fica como está.
+func resolve(path string) string {
+	rest := ""
+	for dir := filepath.Clean(path); ; {
+		if real, err := filepath.EvalSymlinks(dir); err == nil {
+			return filepath.Join(real, rest)
+		}
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			return filepath.Clean(path)
+		}
+		dir, rest = parent, filepath.Join(filepath.Base(dir), rest)
+	}
 }
 
 // within diz se path é dir ou fica dentro dele. A comparação é por

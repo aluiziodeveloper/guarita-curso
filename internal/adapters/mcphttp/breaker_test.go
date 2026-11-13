@@ -31,8 +31,17 @@ func TestHandler_disjuntor(t *testing.T) {
 	t.Cleanup(guarita.Close)
 	for n := range 8 {
 		r, _ := post(t, guarita.URL+"/mcp", toolCall(n, "read_file"))
+		retry := r.Header.Get("Retry-After")
 		t.Logf("chamada %d: %d Retry-After=%q", n+1, r.StatusCode,
-			r.Header.Get("Retry-After"))
+			retry)
+		want := http.StatusBadGateway // o 502 do servidor
+		if n >= 5 {
+			want = http.StatusServiceUnavailable // o do disjuntor
+		}
+		if r.StatusCode != want || (retry != "") != (n >= 5) {
+			t.Errorf("chamada %d: %d Retry-After=%q; quer %d", n+1,
+				r.StatusCode, retry, want)
+		}
 	}
 	if reached.Load() != 5 || tripper.State() != breaker.Open {
 		t.Errorf("chegaram %d; estado %s", reached.Load(),

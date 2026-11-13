@@ -1,6 +1,6 @@
 // Package dlp examina os argumentos de uma chamada em busca de dados
 // que não deveriam sair: CPF, chaves de API, chaves privadas, segredos
-// codificados e, desde a seção de destinos, URLs fora da lista.
+// codificados e, com a lista de destinos, URLs fora dela.
 package dlp
 
 import (
@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+
+	"golang.org/x/text/unicode/norm"
 
 	"github.com/aluiziodeveloper/guarita-curso/internal/app"
 	"github.com/aluiziodeveloper/guarita-curso/internal/domain"
@@ -86,10 +88,30 @@ func (i *Inspector) action(signal string) domain.Decision {
 	return domain.DecisionDeny
 }
 
-// detect aplica os detectores a um texto e, uma vez, ao que estiver
+// detect examina o texto como foi escrito e, se for diferente, na
+// forma NFKC, que troca os caracteres de compatibilidade pelos comuns:
+// um dígito de largura total (U+FF11) vira o dígito ASCII que \d e os
+// prefixos de chave procuram. As duas formas valem, e um achado igual
+// nas duas entra uma vez: a normalização também pode esconder, ao
+// colar um dígito no CPF ou mudar o host de uma URL.
+func (i *Inspector) detect(field, text string) []domain.Finding {
+	findings := i.scan(field, text)
+	folded := norm.NFKC.String(text)
+	if folded == text {
+		return findings
+	}
+	for _, f := range i.scan(field, folded) {
+		if !slices.Contains(findings, f) {
+			findings = append(findings, f)
+		}
+	}
+	return findings
+}
+
+// scan aplica os detectores a um texto e, uma vez, ao que estiver
 // codificado em base64 dentro dele. O detalhe diz o que foi achado,
 // nunca o valor.
-func (i *Inspector) detect(field, text string) []domain.Finding {
+func (i *Inspector) scan(field, text string) []domain.Finding {
 	findings := direct(field, text)
 	findings = append(findings, i.destination(field, text)...)
 	for _, candidate := range token.FindAllString(text, -1) {

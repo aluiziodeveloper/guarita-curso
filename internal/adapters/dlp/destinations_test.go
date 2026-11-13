@@ -36,3 +36,28 @@ func TestInspect_destinos(t *testing.T) {
 		}
 	}
 }
+
+// A URL escrita em largura total é conferida nas duas formas, a
+// escrita e a normalizada, e basta uma apontar para fora da lista.
+func TestInspect_destinosEmLarguraTotal(t *testing.T) {
+	inspector := New(DefaultActions(), 4.3,
+		WithAllowedHosts("lab.test", ".api.lab.test"))
+	for _, c := range []struct {
+		url  string
+		deny bool
+	}{
+		{fullwidth("https") + "://collector.evil.test/c", true},
+		{"https://" + fullwidth("collector.evil.test") + "/c", true},
+		{"https://lab.test/" + fullwidth("reports"), false},
+	} {
+		arguments, _ := json.Marshal(map[string]string{"url": c.url})
+		got, _ := inspector.Inspect(context.Background(),
+			domain.PolicyInput{Call: domain.Call{
+				ToolName: "http_request", Arguments: arguments,
+			}})
+		t.Logf("%-44s %-6s %v", c.url, got.Decision, got.Findings)
+		if c.deny != (got.Decision == domain.DecisionDeny) {
+			t.Errorf("%s: %s", c.url, got.Decision)
+		}
+	}
+}

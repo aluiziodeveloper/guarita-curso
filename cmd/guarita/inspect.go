@@ -46,11 +46,12 @@ func inspectFlags(flags *flag.FlagSet, c *inspectConfig) {
 		})
 }
 
-// logFindings registra o que o inspetor achou: campo e sinal, sem os
-// valores, que o inspetor nunca põe nos achados.
+// logFindings registra o que um inspetor achou, na ida (os argumentos)
+// ou na volta (o resultado): campo e sinal, sem os valores, que o
+// inspetor nunca põe nos achados.
 func logFindings(logger *slog.Logger) app.FindingsObserver {
 	return func(input domain.PolicyInput, inspection domain.Inspection) {
-		logger.Warn("argumentos inspecionados", "agent", input.Agent,
+		logger.Warn("inspeção com achados", "agent", input.Agent,
 			"server", input.Server, "tool", input.Call.ToolName,
 			"decision", string(inspection.Decision),
 			"findings", summarize(inspection.Findings))

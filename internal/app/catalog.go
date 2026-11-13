@@ -42,8 +42,7 @@ type PinCatalog struct {
 }
 
 // DefinitionScanner procura sinais suspeitos numa definição. O
-// varredor estrutural é um adaptador; os classificadores dos próximos
-// módulos serão outros.
+// varredor estrutural, scanner.Structural, é o adaptador da porta.
 type DefinitionScanner interface {
 	Scan(definition domain.ToolDefinition) []domain.Finding
 }

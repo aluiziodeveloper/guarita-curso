@@ -104,9 +104,17 @@ func runAudit(args []string, stdout, stderr io.Writer) error {
 		return fmt.Errorf("trilha truncada ou trocada: termina na %d, "+
 			"com hash %.16s…", last.Seq, last.Hash)
 	}
-	_, _ = fmt.Fprintf(stdout, "trilha íntegra: %d entradas; "+
-		"cabeça %s\n", report.Entries, last.Hash)
+	_, _ = fmt.Fprintf(stdout, "trilha íntegra: %s; cabeça %s\n",
+		entries(report.Entries), last.Hash)
 	return nil
+}
+
+// entries escreve a contagem no singular ou no plural.
+func entries(n int) string {
+	if n == 1 {
+		return "1 entrada"
+	}
+	return fmt.Sprintf("%d entradas", n)
 }
 
 // verifyFile abre o arquivo da trilha e o verifica.
