@@ -147,6 +147,8 @@ Desde o Módulo 7, cada mensagem do agente passa por um parser estrito: uma mens
 
 O que for negado ou malformado volta ao agente como erro JSON-RPC e não chega ao servidor.
 
+Desde o Módulo 23, o stdio aplica também a linha de ida das rotas HTTP (`-dlp`, `-allow-hosts`, `-quota`, `-cost`, `-budget`, `-pipeline` e `-require-stages`) e recusa na partida as opções que não aplica, como `-inspect-results`: ele não revisa as respostas do servidor.
+
 ## Proxy HTTP
 
 A partir do Módulo 8, a Guarita também protege servidores MCP que falam o transporte Streamable HTTP. Com `-upstream`, ela escuta em `127.0.0.1:8080` e atende em `/mcp`:
@@ -228,7 +230,7 @@ A partir do Módulo 12, a política pode vir de regras em Rego, avaliadas pelo O
 A política recebe como `input` o agente (o `sub` do *token*), o servidor (o namespace de `-server`), a ferramenta e os argumentos, e responde em `data.guarita.decision` com `allow`, `deny` ou `require_approval`. A de `policies/` nega por padrão e concede por agente e servidor, em `grants.rego`. Uma política que não compila impede a partida; uma decisão indefinida nega a chamada.
 
 ```bash
-go run github.com/open-policy-agent/opa@v1.21.1 test -v policies
+go run github.com/open-policy-agent/opa@v1.22.4 test -v policies
 ```
 
 ## Aprovação humana
@@ -366,6 +368,14 @@ A partir do Módulo 22, o modo HTTP exige identidade: sem `-agent-key`, a Guarit
 - `-ops-listen` expõe `/metrics`, no formato do Prometheus, `/healthz` e `/readyz`; `-pprof` acrescenta os perfis, só no loopback.
 - `deploy/guarita.Dockerfile` é a imagem distroless; `deploy/prod/` e `deploy/k8s/` têm o Compose e o manifesto Kubernetes, cada um com o seu laboratório.
 - O guia de operação está em [`docs/operations.md`](docs/operations.md).
+
+## Red team e versão 1.0
+
+No Módulo 23, `attacks/redteam` ataca a Guarita inteira, com tudo ligado, pela cadeia combinada dos laboratórios do curso, nos dois modos. O resultado, os achados e o risco residual estão no [relatório de segurança](docs/security-report.md); o que falta, no [*roadmap*](docs/roadmap.md); as mudanças, no [changelog](CHANGELOG.md). A 1.0.0 é publicada depois da revisão técnica externa.
+
+```bash
+go test -race -count=1 -v ./attacks/redteam
+```
 
 ## Ataques de laboratório
 
