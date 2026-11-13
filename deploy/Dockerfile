@@ -5,8 +5,11 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY cmd/ ./cmd/
 COPY internal/ ./internal/
-RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/lab-agent ./cmd/lab-agent \
-    && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/lab-mcp ./cmd/lab-poisoned-mcp
+ENV CGO_ENABLED=0
+RUN go build -trimpath -ldflags="-s -w" \
+      -o /out/lab-agent ./cmd/lab-agent \
+    && go build -trimpath -ldflags="-s -w" \
+      -o /out/lab-mcp ./cmd/lab-poisoned-mcp
 
 FROM gcr.io/distroless/static-debian12:nonroot
 
