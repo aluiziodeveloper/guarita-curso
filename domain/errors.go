@@ -7,6 +7,8 @@ var (
 	ErrEmptyToolName = errors.New("tool name must not be empty")
 	// ErrInvalidArguments identifies arguments that are not a JSON object.
 	ErrInvalidArguments = errors.New("arguments must be a JSON object")
+	// ErrInvalidDecision identifies a decision outside the supported set.
+	ErrInvalidDecision = errors.New("decision is not supported")
 )
 
 // ValidationError identifies the field that failed domain validation.
@@ -15,7 +17,7 @@ type ValidationError struct {
 	kind  error
 }
 
-// Error returns a safe validation message without including submitted values.
+// Error returns a safe message that omits the submitted values.
 func (err *ValidationError) Error() string {
 	return err.kind.Error()
 }
