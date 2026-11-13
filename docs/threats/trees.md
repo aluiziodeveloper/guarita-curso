@@ -52,5 +52,5 @@ A raiz é um nó **E**: basta cortar um dos quatro ramos para o ataque falhar. P
 | `supply-chain` | Rodar código novo sob uma versão aprovada | pacote atualizado sem verificação | versão fixa e assinatura (Módulo 21) |
 | `resource-abuse` | Esgotar cota ou fatura | laço de chamadas E ausência de limite | cota por agente e ferramenta (Módulo 19) |
 | `insecure-parsing` | Derrubar ou enganar o *parser* | mensagem grande OU ambígua OU malformada | limites e *fuzzing* (Módulo 7) |
-| `approval-forgery` | Obter aprovação sem decisão humana real | aprovação forjada OU fadiga | máquina de estados e limites (Módulo 13) |
+| `approval-forgery` | Obter aprovação sem decisão humana real | aprovação forjada OU fadiga | máquina de estados, plano do operador separado e limites (Módulo 13) |
 | `dns-rebinding` | Chamar ferramentas pelo navegador do usuário | nome do atacante resolvido para 127.0.0.1 E endpoint que aceita qualquer `Host` | lista de `Host` e de `Origin`, escuta em loopback (Módulo 8); autenticação (Módulo 9) |
