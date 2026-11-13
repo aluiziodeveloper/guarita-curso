@@ -54,21 +54,26 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Corpus de sementes | Entradas iniciais do fuzzing, de `f.Add` e de `testdata/fuzz` | 07 |
 | Corrida de dados | Acesso concorrente sem ordem a um valor, com ao menos uma escrita | 06 |
 | CSRF | Pedido disparado por outra página, com a credencial que o navegador manda sozinho | 08 |
+| DLP | Prevenção contra vazamento de dados: regras que acham dados sensíveis no que sai | 14 |
 | DNS rebinding | Troca do endereço por trás de um nome para alcançar um serviço local na mesma origem | 08 |
 | Dono de goroutine | Código que a inicia, a faz parar e espera o fim dela | 06 |
 | Dublê de teste (*test double*) | Substituto de uma dependência durante o teste | 05 |
+| Dígito verificador | Dígito calculado a partir dos outros, que denuncia um número inventado | 14 |
 | Ed25519 | Algoritmo de assinatura por curva elíptica; `EdDSA` no JWT | 09 |
 | Embrulhar um erro | Criar um erro novo que guarda o anterior, com `%w` | 03 |
 | Endpoint MCP | Endereço único do transporte HTTP com streaming, como `/mcp`, que recebe os pedidos | 08 |
 | Entrada da política | O que a política recebe: agente, servidor e chamada | 12 |
+| Entropia de Shannon | Imprevisibilidade de um texto, em bits por caractere | 14 |
 | Enumeração completa | Teste que percorre todos os valores de um tipo enumerado | 04 |
 | Envenenamento de ferramenta (*tool poisoning*) | Instrução hostil escondida nos metadados de uma ferramenta, que o modelo lê | 01 |
 | Erro sentinela | Valor de erro declarado no pacote e comparado por identidade | 03 |
 | Espião (*spy*) | Dublê de teste que registra as chamadas que recebe, para o teste conferi-las | 05 |
 | Estado terminal | Estado sem saída: o pedido já foi decidido | 13 |
 | Exemplo testável | Função `Example` cuja saída o `go test` confere | 03 |
+| Exfiltração | Levar para fora, pelos argumentos de uma chamada, um dado que não deveria sair | 14 |
 | Fadiga de aprovação (*approval fatigue*) | O operador aprova por cansaço, depois de pedidos repetidos | 13 |
 | Falha fechada (*fail closed*) | Negar em vez de permitir diante do imprevisto ou quando a defesa não consegue decidir | 05 |
+| Falso positivo | Valor legítimo acusado por um detector | 14 |
 | Fechamento | Função que captura variáveis do escopo em que foi criada | 01 |
 | Ferramenta | Capacidade anunciada por um servidor MCP, com nome, descrição e esquema | 01 |
 | Fluxo de eventos (SSE) | Resposta `text/event-stream`, com eventos enviados um a um | 08 |
@@ -78,9 +83,11 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Goroutine | Função executando de forma independente, gerida pelo runtime de Go | 06 |
 | Impressão digital | SHA-256 da forma canônica da definição | 10 |
 | Indefinido | O estado de uma regra cujo corpo não vale | 12 |
+| Inspetor | Etapa que examina o conteúdo de uma chamada depois da política | 14 |
 | Inversão de dependência | O núcleo declara a interface; a infraestrutura a satisfaz | 05 |
 | JSON-RPC | Formato de chamada remota em JSON usado por todas as mensagens MCP | 01 |
 | JWT | Token com afirmações assinadas, em três partes | 09 |
+| Lista de destinos | Os hosts para onde uma URL nos argumentos pode apontar | 14 |
 | Lista de permissão | Regra que só aceita o que foi declarado; o resto fica de fora até ser ligado | 05 |
 | Lote | Array de mensagens JSON-RPC, removido do MCP | 07 |
 | Marcador sintético | Texto fixo do laboratório, sem correspondência com um segredo real | 01 |
@@ -113,6 +120,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Proxy reverso | Servidor que recebe pedidos em nome de outro e os repassa | 08 |
 | Quórum | Número de operadores diferentes exigido para aprovar | 13 |
 | Raiz de composição | O ponto, em `cmd/guarita`, que escolhe e monta os adaptadores | 05 |
+| RE2 | Sintaxe de expressões regulares com tempo de execução linear | 14 |
 | Receptor | Parâmetro que associa um método a um tipo, por valor ou por ponteiro | 03 |
 | Rego | A linguagem declarativa de políticas do OPA | 12 |
 | Regra completa | Regra que define um único valor para um nome | 12 |
@@ -120,6 +128,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Repositório | Porta que esconde onde e como os dados ficam | 10 |
 | Restrição de compilação | Linha `//go:build` que decide se um arquivo entra no pacote | 06 |
 | Runa | Valor de um ponto de código Unicode em Go, um `int32` | 11 |
+| Semente fixa | Valor inicial do gerador que torna os casos reprodutíveis | 14 |
 | Servidor de autorização | Quem autentica o usuário e emite tokens | 09 |
 | Servidor de recursos | Quem recebe tokens e decide o que eles permitem; a Guarita, para o agente | 09 |
 | Silhueta | O nome em minúsculas ASCII, com hífen e ponto como sublinhado | 11 |
@@ -128,6 +137,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Suíte de ataques | Testes que rodam cada ataque sem e com a defesa | 10 |
 | Teste de consistência | Teste que compara um documento de projeto com os dados do código | 04 |
 | Teste de contrato | Teste do comportamento visível de uma interface, pedido a pedido | 08 |
+| Teste de propriedade | Teste que afirma algo sobre uma família de casos e o confere em casos gerados | 14 |
 | Teste orientado a tabelas (*table-driven tests*) | Casos nomeados numa fatia, executados pelo mesmo laço com subtestes | 03 |
 | Tipo definido | Tipo novo, com identidade própria, declarado a partir de um tipo subjacente | 03 |
 | Toolchain | Compilador e ferramentas acessados pelo comando `go` | 01 |
@@ -150,8 +160,10 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | CI | Integração contínua (*continuous integration*) | 01 |
 | CPF | Cadastro de Pessoas Físicas | 04 |
 | CSRF | Falsificação de pedido entre sites (*cross-site request forgery*) | 08 |
+| DLP | Prevenção contra vazamento de dados (*data loss prevention*) | 14 |
 | HMAC | Resumo com chave, que só quem tem a chave calcula (*hash-based message authentication code*) | 09 |
 | JWT | Token assinado em JSON (*JSON Web Token*) | 08 |
+| LGPD | Lei Geral de Proteção de Dados Pessoais | 14 |
 | MCP | Protocolo de contexto de modelo (*Model Context Protocol*) | 01 |
 | OPA | O motor de políticas *Open Policy Agent* | 05 |
 | OWASP | *Open Worldwide Application Security Project* | 01 |
