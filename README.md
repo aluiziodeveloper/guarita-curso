@@ -191,6 +191,22 @@ go run ./cmd/lab-token -key lab/agent.key -iss https://auth.lab.test \
 
 Sem *token* válido, a resposta é 401 com `WWW-Authenticate` apontando os metadados do recurso em `/.well-known/oauth-protected-resource` (RFC 9728). Sem `-agent-key`, a Guarita só aceita escutar em loopback e avisa no registro; com `-host`, ela não sobe. O registro estruturado sai em JSON na saída de erro e nunca contém *tokens* nem credenciais. `cmd/lab-token` faz o papel do servidor de autorização só no laboratório.
 
+## Catálogo de ferramentas
+
+A partir do Módulo 10, com `-catalog`, a Guarita guarda num arquivo SQLite a impressão digital (SHA-256 da forma canônica) de cada ferramenta que o servidor anuncia, na primeira vez que a vê:
+
+```bash
+./guarita -allow read_file -upstream http://127.0.0.1:9000/mcp -catalog catalog.db
+```
+
+Se o servidor mudar a definição de uma ferramenta já fixada (nome, descrição, esquema ou qualquer outro campo), ela sai do `tools/list` que chega ao agente e qualquer `tools/call` para ela recebe o erro `-32001` com `tool definition changed since it was pinned`. A ferramenta continua barrada mesmo se o servidor voltar à definição original. Uma ferramenta que nunca apareceu num `tools/list` também é negada. O catálogo existe só no modo HTTP; sem `-catalog`, a Guarita avisa no registro que não fixa definições.
+
+As migrações do banco ficam em `internal/adapters/sqlitestore/migrations` e são aplicadas ao abrir, em ordem, com a versão em `PRAGMA user_version`.
+
+## Ataques de laboratório
+
+O diretório [`attacks/`](attacks/README.md) reúne os ataques reproduzíveis, um pacote por ataque, cada um com o teste que o roda sem e com a defesa. Eles rodam com o resto da suíte em `go test ./...`.
+
 ## Arquitetura e regra de imports
 
 A Guarita segue a arquitetura hexagonal decidida nos ADRs [0001](docs/adr/0001-proxy-mcp.md) e [0003](docs/adr/0003-portas-e-adaptadores.md):

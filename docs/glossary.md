@@ -18,6 +18,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | `select` | Espera o primeiro de vários canais | 06 |
 | `slog.LogValuer` | Interface com que um valor diz como quer ser registrado | 09 |
 | `sync.Mutex` | Trava de exclusão mútua: uma goroutine por vez entre `Lock` e `Unlock` | 07 |
+| `user_version` | Inteiro no cabeçalho do SQLite, livre para a aplicação | 10 |
 | Adaptador | Peça de tecnologia que encaixa numa porta | 05 |
 | ADR | Registro de decisão de arquitetura: uma decisão, com o contexto e as consequências | 01 |
 | Agente | Aplicação que coordena o modelo e as conexões com servidores MCP | 01 |
@@ -34,8 +35,10 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Chamada de ferramentas | Ciclo em que o modelo pede uma ferramenta e recebe o resultado como mensagem | 01 |
 | Chave duplicada | Mesmo nome duas vezes num objeto JSON, com leitura imprevisível | 07 |
 | CI | Integração contínua: compilação e testes automáticos a cada push, no GitHub Actions | 01 |
+| Confiança no primeiro uso | Aceitar e fixar o que se vê da primeira vez, e comparar depois | 10 |
 | Confusão de algoritmo | Aceitar o algoritmo que o atacante escreveu no cabeçalho | 09 |
 | Conjunto de métodos | Métodos que pertencem a `T` ou a `*T`; decide a satisfação de interfaces | 03 |
+| Consulta parametrizada | Texto da consulta e valores enviados separados | 10 |
 | Contrabando de mensagem | Segunda mensagem colada depois da primeira na mesma linha | 07 |
 | Contrapressão | Espera que volta até quem envia quando o destino não acompanha | 06 |
 | Corpus de sementes | Entradas iniciais do fuzzing, de `f.Add` e de `testdata/fuzz` | 07 |
@@ -56,9 +59,11 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Fechamento | Função que captura variáveis do escopo em que foi criada | 01 |
 | Ferramenta | Capacidade anunciada por um servidor MCP, com nome, descrição e esquema | 01 |
 | Fluxo de eventos (SSE) | Resposta `text/event-stream`, com eventos enviados um a um | 08 |
+| Forma canônica | Uma única maneira de escrever um valor, para que o hash seja sempre o mesmo | 10 |
 | Fronteira de confiança (*trust boundary*) | Ponto em que dados de uma parte passam a influenciar decisões de outra | 01 |
 | Fuzzing | Teste que gera entradas guiado pela cobertura de código | 07 |
 | Goroutine | Função executando de forma independente, gerida pelo runtime de Go | 06 |
+| Impressão digital | SHA-256 da forma canônica da definição | 10 |
 | Inversão de dependência | O núcleo declara a interface; a infraestrutura a satisfaz | 05 |
 | JSON-RPC | Formato de chamada remota em JSON usado por todas as mensagens MCP | 01 |
 | JWT | Token com afirmações assinadas, em três partes | 09 |
@@ -66,6 +71,7 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Lote | Array de mensagens JSON-RPC, removido do MCP | 07 |
 | Marcador sintético | Texto fixo do laboratório, sem correspondência com um segredo real | 01 |
 | Middleware | `http.Handler` que embrulha outro, como um decorador | 08 |
+| Migração | Passo numerado de mudança no esquema do banco | 10 |
 | Modelo de ameaças | Documento versionado com ativos, zonas, fronteiras e ameaças, mantido junto do código | 04 |
 | Modelo de domínio anêmico | Tipos com nomes de negócio e pouco ou nenhum comportamento próprio | 03 |
 | Módulo | Unidade Go que declara caminho, versão mínima e dependências | 01 |
@@ -77,21 +83,25 @@ o termo foi apresentado. O glossário cresce a cada módulo.
 | Parâmetro variádico | Último parâmetro `...T`, recebido como fatia | 04 |
 | Pedido | Mensagem JSON-RPC com `method` e `id`, que espera resposta | 07 |
 | PEM | Texto em Base64 entre marcadores, com a chave em PKIX ou PKCS #8 | 09 |
+| Pin (*pinning*) | Definição fixada de uma ferramenta num servidor | 10 |
 | Porta | Conversa com propósito, expressa como interface do caso de uso | 05 |
 | Portas e adaptadores (*ports and adapters*) | Outro nome da arquitetura hexagonal: o núcleo fala com o mundo por portas, e cada tecnologia é um adaptador | 05 |
 | Proxy reverso | Servidor que recebe pedidos em nome de outro e os repassa | 08 |
 | Raiz de composição | O ponto, em `cmd/guarita`, que escolhe e monta os adaptadores | 05 |
 | Receptor | Parâmetro que associa um método a um tipo, por valor ou por ponteiro | 03 |
 | Regra de dependência | Dependências de código apontam para o núcleo | 05 |
+| Repositório | Porta que esconde onde e como os dados ficam | 10 |
 | Restrição de compilação | Linha `//go:build` que decide se um arquivo entra no pacote | 06 |
 | Servidor de autorização | Quem autentica o usuário e emite tokens | 09 |
 | Servidor de recursos | Quem recebe tokens e decide o que eles permitem; a Guarita, para o agente | 09 |
 | STRIDE | Seis categorias de ameaça, cada uma ligada a uma propriedade de segurança | 04 |
+| Suíte de ataques | Testes que rodam cada ataque sem e com a defesa | 10 |
 | Teste de consistência | Teste que compara um documento de projeto com os dados do código | 04 |
 | Teste de contrato | Teste do comportamento visível de uma interface, pedido a pedido | 08 |
 | Teste orientado a tabelas (*table-driven tests*) | Casos nomeados numa fatia, executados pelo mesmo laço com subtestes | 03 |
 | Tipo definido | Tipo novo, com identidade própria, declarado a partir de um tipo subjacente | 03 |
 | Toolchain | Compilador e ferramentas acessados pelo comando `go` | 01 |
+| Troca silenciosa (*rug pull*) | O servidor muda a definição de uma ferramenta depois de aprovada | 10 |
 | Validação na fronteira | Conferência dos dados antes de entregá-los ao próximo componente | 03 |
 | Valor de contexto | Dado de um pedido guardado no `context.Context`, com chave própria | 09 |
 | Valor zero | Valor que Go atribui a uma variável sem inicialização explícita | 03 |
