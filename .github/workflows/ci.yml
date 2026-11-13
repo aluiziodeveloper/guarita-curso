@@ -6,6 +6,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Cada action é fixada pelo commit, e não pela tag: uma tag pode ser
+# movida para outro commit por quem controla o repositório da action, e
+# o hash, não. O comentário diz a versão, e o Dependabot atualiza os dois.
 permissions:
   contents: read
 
@@ -15,10 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Go
-        uses: actions/setup-go@v7.0.0
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           # go.mod declara a versão mínima; a CI testa a correção mais
           # recente da mesma linha.
@@ -49,7 +52,7 @@ jobs:
           ./internal/adapters/mcpproxy
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v9.3.0
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
         with:
           version: v2.15.0
 
@@ -58,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # O laboratório só é reproduzível se a imagem compilar; os testes
       # Go não exercitam o contexto de build do Dockerfile.
@@ -70,10 +73,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Go
-        uses: actions/setup-go@v7.0.0
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version: "1.27.x"
           check-latest: true
@@ -92,10 +95,10 @@ jobs:
       OPA: github.com/open-policy-agent/opa@v1.21.1
     steps:
       - name: Check out repository
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Go
-        uses: actions/setup-go@v7.0.0
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version: "1.27.x"
           check-latest: true
@@ -110,3 +113,60 @@ jobs:
 
       - name: Run opa test
         run: go run "$OPA" test -v policies
+
+  vulncheck:
+    name: Vulnerability check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: "1.27.x"
+          check-latest: true
+          cache: true
+
+      # Falha se o código alcança uma vulnerabilidade conhecida, da
+      # biblioteca padrão ou de um módulo; as que ele não chama ficam no
+      # relatório, sem falhar.
+      - name: Run govulncheck
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.9.0 ./...
+
+  release:
+    name: Reproducible release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: "1.27.x"
+          check-latest: true
+          cache: true
+
+      - name: Install release tools
+        env:
+          CGO_ENABLED: "0"
+        run: |
+          GOBIN="$RUNNER_TEMP/tools" go install \
+            github.com/goreleaser/goreleaser/v2@v2.20.2
+          GOBIN="$RUNNER_TEMP/tools" go install \
+            github.com/anchore/syft/cmd/syft@v1.57.1
+
+      # Os módulos ficam no cache antes: a release roda sem rede.
+      - name: Download modules
+        run: go mod download
+
+      - name: Check GoReleaser configuration
+        run: '"$RUNNER_TEMP/tools/goreleaser" check'
+
+      # O mesmo commit em dois caminhos: binários e pacotes iguais, ou a
+      # CI falha.
+      - name: Build the release twice and compare
+        run: TOOLS="$RUNNER_TEMP/tools" sh deploy/release/reproduce.sh
