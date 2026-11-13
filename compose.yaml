@@ -1,0 +1,29 @@
+# Ambiente de desenvolvimento: o Go e as ferramentas do projeto num contêiner.
+#
+#   docker compose up -d --build   constrói a imagem e deixa o contêiner de pé
+#   docker compose exec dev bash   abre um terminal dentro dele, em /workspace
+#   docker compose down            encerra
+#
+# O código fica na sua máquina e aparece no contêiner em /workspace. Os dois
+# volumes guardam os módulos baixados e o cache de compilação entre uma sessão
+# e outra.
+name: guarita-dev
+
+services:
+  dev:
+    build:
+      context: deploy/dev
+      args:
+        UID: ${HOST_UID:-1000}
+    init: true
+    command: sleep infinity
+    stop_grace_period: 1s
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - go-mod:/go/pkg/mod
+      - go-build:/home/dev/.cache/go-build
+
+volumes:
+  go-mod:
+  go-build:
