@@ -17,6 +17,8 @@ import (
 	"strconv"
 	"time"
 
+	"go.opentelemetry.io/otel/trace"
+
 	"github.com/aluiziodeveloper/guarita-curso/internal/adapters/mcpproxy"
 	"github.com/aluiziodeveloper/guarita-curso/internal/platform/secret"
 )
@@ -71,6 +73,7 @@ type Handler struct {
 	catalog     ToolReviewer
 	results     ResultReviewer
 	transport   http.RoundTripper // nil: o http.DefaultTransport
+	tracer      trace.Tracer
 }
 
 // Option ajusta um Handler: é uma opção funcional.
@@ -124,6 +127,7 @@ func NewHandler(
 		bodyTimeout: DefaultBodyTimeout,
 		logger:      slog.New(slog.DiscardHandler),
 		agent:       func(context.Context) string { return "" },
+		tracer:      nopTracer,
 	}
 	for _, option := range options {
 		option(handler)
@@ -145,6 +149,7 @@ func (h *Handler) rewrite(r *httputil.ProxyRequest) {
 	r.Out.URL.Path = h.upstream.Path
 	r.Out.URL.RawPath = h.upstream.RawPath
 	r.Out.Header = allowedHeaders(r.Out.Header)
+	inject(r.In, r.Out.Header)
 	if !h.credential.IsZero() {
 		r.Out.Header.Set("Authorization",
 			"Bearer "+h.credential.Reveal())
@@ -158,6 +163,8 @@ func (h *Handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	defer h.logAccess(r, w, time.Now())
 	switch r.Method {
 	case http.MethodPost:
+		r, end := h.trace(r)
+		defer end()
 		h.post(w, r)
 	case http.MethodGet, http.MethodDelete:
 		h.proxy.ServeHTTP(w, r)
